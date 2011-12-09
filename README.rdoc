@@ -1,5 +1,4 @@
-alarmproject
-===============
+== alarmproject
 
 * this project has a heavy database
 * we are exploring how to work with lots of data with Rails 3 and MySQL or PostgreSQL or MongoDB
