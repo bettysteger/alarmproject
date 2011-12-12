@@ -17,8 +17,9 @@ group :development do
   gem 'sys-proctable'
 end
 
+gem 'rspec-rails', '2.6.1', :group => [:development, :test]
+
 group :test do
-  gem 'rspec-rails', '2.6.1'
   gem 'mongoid-rspec', :require => false
   gem 'database_cleaner', '0.6.7'
   gem 'cucumber', '1.1.1'
