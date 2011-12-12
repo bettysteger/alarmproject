@@ -1,0 +1,8 @@
+ALARM climate scenario created on Tue Jul 26 11:54:23 FLEDT 2005
+.tmp = near-surface temperature (degrees Celsius)
+SRES=A1FI GCM=HadCM3 Period=2001-2100 Variable=.tmp Variability=2x1951-2000
+[Long= -11.00,  32.00] [Lati=  34.00,  72.00] [Grid X,Y= 258, 228]
+[Boxes=   31143] [Years=2001-2100] [Multi=    0.1000] [Missing=-999]
+Grid-ref=   4, 109
+   61   49   62   82  104  135  152  144  135  117   95   77
+   57   69   85   92  121  129  157  153  120  112   80   72
