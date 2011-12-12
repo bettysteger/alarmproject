@@ -136,6 +136,7 @@ GEM
       hike (~> 1.2)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
+    sys-proctable (0.9.1)
     term-ansicolor (1.0.7)
     thor (0.14.6)
     tilt (1.3.3)
@@ -162,5 +163,6 @@ DEPENDENCIES
   rspec-rails (= 2.6.1)
   ruby-debug19
   sass-rails (~> 3.1.5)
+  sys-proctable
   turn (= 0.8.2)
   uglifier (>= 1.0.3)
