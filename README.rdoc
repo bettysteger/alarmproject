@@ -2,7 +2,7 @@
 
 * this project has a heavy database
 * we are exploring how to work with lots of data with Rails 3 and MySQL or PostgreSQL or MongoDB
-* our data is located in db/daten_txt (1,14 GB) .. this folder is in the gitignore, see below where you can download the data
+* our data is located in db/data (1,14 GB) .. this folder is in the gitignore, see below where you can download the data
 
 
 == ALARM observed and scenario climate data
