@@ -20,10 +20,10 @@ namespace :db do
         begin
           Process.kill(2,p)
         rescue SystemCallError => e
-                raise e
-              else
-                puts "Killed mongod #{p} with signal 2"
-              end
+            raise e
+          else
+            puts "Killed mongod #{p} with signal 2"
+          end
         end
       else
         puts "No mongod process is running."
@@ -41,7 +41,7 @@ def get_pids
   procs = Array.new
 
   ProcTable.ps {|p|
-    if p.name == "mongod"
+    if p.comm == "mongod"
       procs << p.pid
     end
   }

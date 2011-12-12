@@ -9,7 +9,7 @@ gem 'jquery-rails'
 group :assets do
   gem 'sass-rails',   '~> 3.1.5'
   gem 'coffee-rails', '~> 3.1.1'
-  gem 'uglifier', '>= 1.0.3'
+  gem 'uglifier',     '>= 1.0.3'
 end
 
 group :development do
@@ -19,6 +19,8 @@ end
 
 group :test do
   gem 'rspec-rails', '2.6.1'
+  gem 'mongoid-rspec', :require => false
+  gem 'database_cleaner', '0.6.7'
   gem 'cucumber', '1.1.1'
   # Pretty printed test output
   gem 'turn', '0.8.2', :require => false

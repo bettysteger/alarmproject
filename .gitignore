@@ -10,6 +10,8 @@
 # Ignore the default  database stuff.
 /db/data
 /db/mongod.lock
+/db/journal
+/db/alarmproject_*.*
 
 # Ignore all logfiles and tempfiles.
 /log/*.log

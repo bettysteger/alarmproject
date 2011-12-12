@@ -51,6 +51,8 @@ module Alarmproject
     
     # when generating a model (rails g model) default tests will be created
     config.generators do |g|
+      g.view_specs false
+      g.helper_specs false
       g.test_framework :rspec, :views => false, :fixture => true
       g.fixture_replacement :factory_girl, :dir => 'spec/factories'
     end
