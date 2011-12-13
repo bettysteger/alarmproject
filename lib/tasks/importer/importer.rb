@@ -1,7 +1,7 @@
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "active_resource/railtie"
-require 'bigdecimal' # needed because of float - float calculation round
+require 'bigdecimal' # needed because of float rounding errors
 
 class Importer
 
@@ -19,59 +19,68 @@ class Importer
     scenario = Scenario.find_or_create_by(name: @scenario)
     variable = Variable.find_or_create_by(name: @variable)
 
-    start_values, start_year, end_year, multi, year, point = nil
-    line_counter = 0
-  
+    year_range, multi = 0
+    
+    # get values from first lines (year range and multiplicator)
     File.open(@filepath).each do |line|
       begin
-        month = 1
-        line_counter += 1
-        start_year = get_start_year(line) if start_year == nil
-        end_year = get_end_year(line) if end_year == nil
-        multi = get_multi(line) if multi == nil
-        point = create_point(line) if point == nil #|| point.is_a?(Point)
-        
-        if create_point(line) 
-          year = start_year
-          start_values = true
-          next
-        end
-        
-        if start_values
-          line.split(" ").each do |value_number|
-            number = BigDecimal.new(value_number) * BigDecimal.new(multi.to_s)
-            
-            if month > 12
-              raise "Error in #{@filepath} on line #{line_counter}. Wrong number of months"
-            end
-            Value.create!(model: model, scenario: scenario, variable: variable, 
-                     point: point, year: year, month: month, number: number)
-            month += 1
-          end
-          point = nil if year >= end_year # to generate a new point on the next grid_ref
-          year += 1
-        end
+        year_range = get_year_range(line)
+        multi = get_multi(line)
+        break if multi
       rescue Exception => e
         puts "Error in #{@filepath}: #{e.message}"
       end
     end
+    
+    line_counter, year, point = 0
+    start_year = year_range.first
+    end_year = year_range.last
+    
+    File.open(@filepath).each do |line|
+        begin
+          line_counter += 1
+          next if line_counter <= 5 # ignore first lines
+
+          if point?(line)
+            year = start_year # sets year to start year
+            point = create_point(line) # generate a new point
+            next
+          end
+          
+          # create values in year range
+          if year >= start_year && year <= end_year
+
+            month = 1 # every line begins with month 1
+            
+            line.split(" ").each do |value|
+              number = BigDecimal.new(value) * BigDecimal.new(multi)
+              
+              if month > 12
+                raise "Error in #{@filepath} on line #{line_counter}. Wrong number of months"
+              end
+              
+              Value.create!(model: model, scenario: scenario, variable: variable,
+                            point: point, year: year, month: month, number: number)
+              month += 1
+            end
+            year += 1
+          end
+        rescue Exception => e
+          puts "Error in #{@filepath} on line #{line_counter}: #{e.message}"
+        end
+      end
   end
   
   private
     
-    def get_start_year(line)
+    def get_year_range(line)
       result = line.match(/Years=(\d+)-(\d+)/)
-      result ? result[1].to_i : nil
-    end
-    
-    def get_end_year(line)
-      result = line.match(/Years=(\d+)-(\d+)/)
-      result ? result[2].to_i : nil
+      result ? [result[1].to_i, result[2].to_i] : nil
     end
     
     def get_multi(line)
       result = line.match(/Multi=\s*(\d+\.\d+)/)
-      result ? result[1].to_f : nil
+      result ? result[1] : nil
     end
     
     def create_point(line)
@@ -80,6 +89,10 @@ class Importer
         y = result[2].to_i
         Point.find_or_create_by(x: x, y: y)
       end
+    end
+    
+    def point?(line)
+      !!(line =~ /Grid-ref/)
     end
   
 end
