@@ -1,43 +1,78 @@
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "active_resource/railtie"
+require 'bigdecimal' # needed because of float - float calculation round
 
 class Importer
 
+  # initialize new import, default model type is Europe
   def initialize folder, file, model = "Europe"
     @filepath = File.join(folder, file)
     @model = model
     @scenario = file.split(".").first
     @variable = file.split(".").last
   end
-
+  
+  # executes the import for one file
   def execute
     model = Model.find_or_create_by(name: @model)
     scenario = Scenario.find_or_create_by(name: @scenario)
     variable = Variable.find_or_create_by(name: @variable)
-    
-    start_values = false
-    year = 2001
-    
+
+    start_values, start_year, multi, year = nil
+    line_counter = 0
+  
     File.open(@filepath).each do |line|
-      month = 1
-      
-      if line =~ /Grid-ref/
-        puts line
-        year = 2001
-        start_values = true
-        next
-      end
-      
-      if start_values
-        line.split(" ").each do |value|
-          puts "year: #{year} - month: #{month} - value: #{value}"
-          month += 1
+      begin
+        month = 1
+        line_counter += 1
+        start_year = get_start_year(line) if start_year == nil
+        multi = get_multi(line) if multi == nil
+        
+        if point = create_point(line)
+          year = start_year
+          start_values = true
+          next
         end
-        year += 1
-        #start_values = false # only first line/year
+        
+        if start_values
+          line.split(" ").each do |value_number|
+            number = BigDecimal.new(value_number) * BigDecimal.new(multi.to_s)
+            
+            if month > 12
+              raise "Error in #{@filepath} on line #{line_counter}. Wrong number of months"
+            end
+            Value.create!(model: model, scenario: scenario, variable: variable, 
+                      point: point, year: year, month: month, number: number)
+            month += 1
+          end
+          year += 1
+        end
+      rescue Exception => e
+        puts "Error in #{@filepath}: #{e.message}"
       end
     end
   end
+  
+  private
+    
+    def get_start_year(line)
+      result = line.match(/Years=(\d+)-(\d+)/)
+      result ? result[1].to_i : nil
+    end
+    
+    def get_multi(line)
+      result = line.match(/Multi=\s*(\d+\.\d+)/)
+      result ? result[1].to_f : nil
+    end
+    
+    def create_point(line)
+      if result = line.match(/Grid-ref=\s*(\d+),\s*(\d+)/)
+        x = result[1].to_i
+        y = result[2].to_i
+        puts "Point: x #{x} y #{y}"
+        Point.find_or_create_by(x: x, y: y)
+      end
+    end
   
 end
