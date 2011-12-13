@@ -59,8 +59,16 @@ class Importer
                 raise "Error in #{@filepath} on line #{line_counter}. Wrong number of months"
               end
               
-              Value.create!(model: model, scenario: scenario, variable: variable,
-                            point: point, year: year, month: month, number: number)
+              # Value.create!(model: model, scenario: scenario, variable: variable,
+              #               point: point, year: year, month: month, number: number)
+              # puts "#{year}-#{month} no: #{number}, #{model.name}/#{scenario.name}/#{variable.name}"
+              v = Value.new(model: model, scenario: scenario, variable: variable,
+                            point: point, year: year, month: month, number: number) 
+              File.open("db/data/values.json","a+") { |f| f.write(v.to_json + "\n")}
+              if point.new_record?
+                File.open("db/data/points.json","a+") { |f| f.write(point.to_json + "\n")}
+              end
+              #puts v.to_json       
               month += 1
             end
             year += 1
@@ -87,7 +95,7 @@ class Importer
       if result = line.match(/Grid-ref=\s*(\d+),\s*(\d+)/)
         x = result[1].to_i
         y = result[2].to_i
-        Point.find_or_create_by(x: x, y: y)
+        Point.find_or_initialize_by(x: x, y: y)
       end
     end
     

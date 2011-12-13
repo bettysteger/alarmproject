@@ -1,7 +1,7 @@
 namespace :db do
   namespace :mongo do
 
-    # start db server
+    desc "start mongodb server"
     task :start do
       pr = get_pids
       if pr.length == 0
@@ -12,7 +12,7 @@ namespace :db do
       end
     end
 
-    # stop db server
+    desc "stop mongodb server"
     task :stop do
       pr = get_pids
       if pr.length > 0
