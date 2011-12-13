@@ -13,8 +13,8 @@ class Value
   validates :variable,  presence: true
   validates :point,     presence: true
   
-  belongs_to :model
-  belongs_to :scenario
-  belongs_to :variable
-  belongs_to :point
+  belongs_to :model, index: true
+  belongs_to :scenario, index: true
+  belongs_to :variable, index: true
+  belongs_to :point, index: true
 end

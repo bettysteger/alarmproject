@@ -1,8 +1,10 @@
 development:
+  #autocreate_indexes: true
   host: localhost
   database: alarmproject_development
 
 test:
+  #autocreate_indexes: true
   host: localhost
   database: alarmproject_test
 
