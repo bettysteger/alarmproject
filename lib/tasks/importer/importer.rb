@@ -70,7 +70,6 @@ class Importer
       if result = line.match(/Grid-ref=\s*(\d+),\s*(\d+)/)
         x = result[1].to_i
         y = result[2].to_i
-        puts "Point: x #{x} y #{y}"
         Point.find_or_create_by(x: x, y: y)
       end
     end
