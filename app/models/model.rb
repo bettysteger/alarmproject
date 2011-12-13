@@ -3,8 +3,9 @@ class Model
   
   field :name, type: String
   field :desc, type: String
+  key   :name
   
   validates :name, presence: true, uniqueness: true
   
-  has_many :points
+  has_many :values
 end

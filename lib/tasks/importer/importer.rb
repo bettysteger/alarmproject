@@ -3,7 +3,7 @@ require "action_mailer/railtie"
 require "active_resource/railtie"
 
 class Importer
-  
+
   def initialize folder, file, model = "Europe"
     @filepath = File.join(folder, file)
     @model = model
