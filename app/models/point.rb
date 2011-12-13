@@ -7,6 +7,7 @@ class Point
   
   validates :x, presence: true
   validates :y, presence: true
+  validates :x, uniqueness: {scope: :y} # validates the uniqueness on x and y
   
   has_many :values
 end
