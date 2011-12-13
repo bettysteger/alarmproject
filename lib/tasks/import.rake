@@ -4,13 +4,22 @@ namespace :import do
   
   desc "Imports clima data"
   task :data => :environment do
-    source = Rails.env == :production ? "db/data" : "spec/fixtures"
+    startTime = Time.now
+    if Rails.env == :production
+      source = "db/data"
+    elsif Rails.env == :test
+      source = "spec/fixtures"
+    else
+      source = "lib/tasks/importer/debug"
+    end
     folder = File.join(Rails.root + source)
     
     Dir.foreach(folder) do |file|
       next if file == '.' or file == '..'
       importer = Importer.new(folder, file)
+      puts "Import started"
       importer.execute
+      puts "Import finished in " + (Time.now - startTime).to_s + " s"
     end
   end
   
