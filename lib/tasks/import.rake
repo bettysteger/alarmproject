@@ -5,14 +5,15 @@ namespace :db do
   desc "Get all clima data"
   task :get_data => :environment do
     start_time = Time.now
-    puts "start Import..."
+    puts "start Import... at #{start_time}"
     
     source = Rails.env.test? ? "spec/fixtures" : "db/data"
     folder = File.join(Rails.root + source)
     
-    #Dir[folder + "/*.*"].each do |file|
-    Parallel.each(Dir[folder + "/*.*"]) do |file|
+    Dir[folder + "/*.*"].each do |file|
+    #Parallel.each(Dir[folder + "/*.*"], :in_threads=>6) do |file|
       start_file_time = Time.now
+      puts "start file..."
       importer = Importer.new(folder, file)
       importer.execute
       puts "'#{File.basename(file)}' imported in #{(Time.now - start_file_time).round(2)} s"

@@ -9,4 +9,8 @@ class Point
   validates :x, uniqueness: {scope: :y} # validates the uniqueness on x and y
   
   has_many :values
+  
+  def to_hash
+    {x: x, y: y}
+  end
 end

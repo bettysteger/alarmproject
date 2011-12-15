@@ -17,4 +17,11 @@ class Value
   belongs_to :scenario, index: true
   belongs_to :variable, index: true
   belongs_to :point, index: true
+  
+  def to_hash
+    {
+      year: year, month: month, number: number, 
+      model_id: model.id, scenario_id: scenario.id, variable_id: variable.id, point_id: point.id
+    }
+  end
 end

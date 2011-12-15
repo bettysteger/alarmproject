@@ -103,7 +103,10 @@ class Importer
     
     def write_to_json(instance)
       model_name = instance.class.name.downcase + "s"
-      File.open(json_path(model_name),"a+") { |f| f.write(instance.to_json + "\n")} if instance.new_record?
+      if instance.new_record?
+        instance = instance.to_hash
+        File.open(json_path(model_name),"a+") { |f| f.write(JSON(instance) + "\n")}
+      end      
     end
     
     def json_path(what)
