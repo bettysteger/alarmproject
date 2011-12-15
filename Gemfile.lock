@@ -163,6 +163,7 @@ DEPENDENCIES
   cucumber (= 1.1.1)
   database_cleaner (= 0.6.7)
   jquery-rails
+  json (= 1.6.3)
   mongoid (= 2.3.4)
   mongoid-rspec
   rails (= 3.1.3)

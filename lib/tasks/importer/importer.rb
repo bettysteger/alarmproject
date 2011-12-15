@@ -1,6 +1,7 @@
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "active_resource/railtie"
+require "json"
 require 'bigdecimal' # needed because of float rounding errors
 
 class Importer
@@ -44,6 +45,9 @@ class Importer
           if point?(line)
             year = start_year # sets year to start year
             point = create_point(line) # generate a new point
+            if point.new_record?
+              File.open("db/data/points.json","a+") { |f| f.write(point.to_json + "\n")}
+            end
             next
           end
           
@@ -65,10 +69,6 @@ class Importer
               v = Value.new(model: model, scenario: scenario, variable: variable,
                             point: point, year: year, month: month, number: number) 
               File.open("db/data/values.json","a+") { |f| f.write(v.to_json + "\n")}
-              if point.new_record?
-                File.open("db/data/points.json","a+") { |f| f.write(point.to_json + "\n")}
-              end
-              #puts v.to_json       
               month += 1
             end
             year += 1
