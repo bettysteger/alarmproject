@@ -1,8 +1,8 @@
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "active_resource/railtie"
-require "json"       # speedup
-require 'bigdecimal' # needed because of float rounding errors
+require "json" # speedup
+require "bigdecimal" # needed because of float rounding errors
 
 class Importer
 
@@ -75,7 +75,7 @@ class Importer
               #               point: point, year: year, month: month, number: number) 
               value = {
                 year: year, month: month, number: number, 
-                model_id: model.id, scenario_id: scenario.id, variable_id: variable.id, point_id: point.id
+                model_id: model.id.to_s, scenario_id: scenario.id.to_s, variable_id: variable.id.to_s, point_id: point.id.to_s
               }
               write_to_json(value, "values")
                  
