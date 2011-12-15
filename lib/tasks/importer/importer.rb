@@ -1,6 +1,7 @@
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "active_resource/railtie"
+require "json"
 require 'bigdecimal' # needed because of float rounding errors
 
 class Importer
