@@ -9,8 +9,6 @@ namespace :db do
     puts "Start converting... at #{start_time}"
     
     source = Rails.env.test? ? "spec/fixtures" : "db/data"
-    
-  #  source = "spec/fixtures"
     folder = File.join(Rails.root + source)
     
     cleanup(folder)

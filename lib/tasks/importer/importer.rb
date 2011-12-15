@@ -49,11 +49,13 @@ class Importer
         begin
           line_counter += 1
           next if line_counter <= 5 # ignore first lines
+          
+          puts "working on line #{line_counter}..." if line_counter % 5000 == 0
 
           if point?(line)
             year = start_year # sets year to start year
             point = create_point(line) # generate a new point
-            write_to_json(point)
+            write_to_json(point.to_hash, "points") if point.new_record?
             next
           end
           
@@ -69,10 +71,13 @@ class Importer
                 raise "Error in #{@filepath} on line #{line_counter}. Wrong number of months"
               end
                             
-              value = Value.new(model: model, scenario: scenario, variable: variable,
-                            point: point, year: year, month: month, number: number) 
-              
-              write_to_json(value)
+              # value = Value.new(model: model, scenario: scenario, variable: variable,
+              #               point: point, year: year, month: month, number: number) 
+              value = {
+                year: year, month: month, number: number, 
+                model_id: model.id, scenario_id: scenario.id, variable_id: variable.id, point_id: point.id
+              }
+              write_to_json(value, "values")
                  
               month += 1
             end
@@ -108,12 +113,8 @@ class Importer
       !!(line =~ /Grid-ref/)
     end
     
-    def write_to_json(instance)
-      model_name = instance.class.name.downcase + "s"
-      if instance.new_record?
-        instance = instance.to_hash
-        File.open(json_path(model_name),"a+") { |f| f.write(JSON(instance) + "\n")}
-      end      
+    def write_to_json(hash, what)
+      File.open(json_path(what),"a+") { |f| f.write(JSON(hash) + "\n")}
     end
     
     def json_path(what)
