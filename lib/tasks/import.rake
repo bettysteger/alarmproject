@@ -13,6 +13,7 @@ namespace :db do
   #  source = "spec/fixtures"
     folder = File.join(Rails.root + source)
     
+    cleanup(folder)
     prepare_import(folder)
     execute_import(folder)
 
@@ -31,6 +32,15 @@ namespace :db do
   
   desc "All in-one importer"
   task :full_import => [:environment, :get_data, :import]
+  
+  # Helper methods:
+  
+  # delete old jsons files
+  def cleanup(folder)
+    Dir[folder + "/json/*.json"].each do |file|
+      File.delete(file)
+    end
+  end  
   
   # prepare import (sequential)
   def prepare_import(folder)

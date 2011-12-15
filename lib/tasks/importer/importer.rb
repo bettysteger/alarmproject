@@ -121,8 +121,6 @@ class Importer
       Dir.mkdir(dirpath) unless File.exists?(dirpath)
       name = File.basename(@filepath) + ".#{what}.json"
       json_path = dirpath + name
-      File.delete(json_path) if File.exists?(json_path)
-      json_path
     end
   
 end
