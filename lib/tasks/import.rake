@@ -7,18 +7,15 @@ namespace :db do
     start_time = Time.now
     puts "start Import..."
     
-    source = Rails.env.production? ? "db/data" : "spec/fixtures"
-    source = "lib/tasks/importer/debug" if Rails.env.development?
-    
+    source = Rails.env.test? ? "spec/fixtures" : "db/data"
     folder = File.join(Rails.root + source)
     
-    Dir.foreach(folder) do |file|
-      next if file == '.' or file == '..'
-      
+    #Dir[folder + "/*.*"].each do |file|
+    Parallel.each(Dir[folder + "/*.*"]) do |file|
       start_file_time = Time.now
       importer = Importer.new(folder, file)
       importer.execute
-      puts "'#{file}' imported in #{(Time.now - start_file_time).round(2)} s"
+      puts "'#{File.basename(file)}' imported in #{(Time.now - start_file_time).round(2)} s"
     end
     puts "Import finished in #{(Time.now - start_time).round(2)} s"
   end
@@ -27,8 +24,8 @@ namespace :db do
   task :import => :environment do  
     start_time = Time.now
     
-    `mongoimport -d #{db_name} -c values db/data/values.json`
-    `mongoimport -d #{db_name} -c points db/data/points.json`
+    `mongoimport -d #{db_name} -c values db/data/json/*.values.json`
+    `mongoimport -d #{db_name} -c points db/data/json/*.points.json`
     
     puts "Import finished in #{(Time.now - start_time).round(2)} s"
   end

@@ -7,7 +7,8 @@ class Importer
 
   # initialize new import, default model type is Europe
   def initialize folder, file, model = "Europe"
-    @filepath = File.join(folder, file)
+    @filepath = file
+    @folder = folder
     @model = model
     @scenario = file.split(".").first
     @variable = file.split(".").last
@@ -44,6 +45,7 @@ class Importer
           if point?(line)
             year = start_year # sets year to start year
             point = create_point(line) # generate a new point
+            write_to_json(point)
             next
           end
           
@@ -58,17 +60,12 @@ class Importer
               if month > 12
                 raise "Error in #{@filepath} on line #{line_counter}. Wrong number of months"
               end
-              
-              # Value.create!(model: model, scenario: scenario, variable: variable,
-              #               point: point, year: year, month: month, number: number)
-              # puts "#{year}-#{month} no: #{number}, #{model.name}/#{scenario.name}/#{variable.name}"
-              v = Value.new(model: model, scenario: scenario, variable: variable,
+                            
+              value = Value.new(model: model, scenario: scenario, variable: variable,
                             point: point, year: year, month: month, number: number) 
-              File.open("db/data/values.json","a+") { |f| f.write(v.to_json + "\n")}
-              if point.new_record?
-                File.open("db/data/points.json","a+") { |f| f.write(point.to_json + "\n")}
-              end
-              #puts v.to_json       
+              
+              write_to_json(value)
+                 
               month += 1
             end
             year += 1
@@ -101,6 +98,18 @@ class Importer
     
     def point?(line)
       !!(line =~ /Grid-ref/)
+    end
+    
+    def write_to_json(instance)
+      model_name = instance.class.name.downcase + "s"
+      File.open(json_path(model_name),"a+") { |f| f.write(instance.to_json + "\n")} if instance.new_record?
+    end
+    
+    def json_path(what)
+      dirpath =  File.join(@folder + "/json/")
+      Dir.mkdir(dirpath) unless File.exists?(dirpath)
+      name = File.basename(@filepath) + ".#{what}.json"
+      dirpath + name
     end
   
 end
