@@ -3,7 +3,6 @@ class Point
 
   field :x,     type: Float
   field :y,     type: Float
-  key   :x, :y
   
   validates :x, presence: true
   validates :y, presence: true
