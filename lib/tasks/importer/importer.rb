@@ -1,7 +1,7 @@
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "active_resource/railtie"
-require "json"
+require "json"       # speedup
 require 'bigdecimal' # needed because of float rounding errors
 
 class Importer
@@ -11,15 +11,22 @@ class Importer
     @filepath = file
     @folder = folder
     @model = model
-    @scenario = file.split(".").first
-    @variable = file.split(".").last
+    @scenario = File.basename(@filepath).split(".").first    
+    @variable = File.basename(@filepath).split(".").last
+  end
+  
+  # prepare mongo db with "basic" data
+  def prepare
+    Model.find_or_create_by(name: @model)
+    Scenario.find_or_create_by(name: @scenario)
+    Variable.find_or_create_by(name: @variable)
   end
   
   # executes the import for one file
   def execute
-    model = Model.find_or_create_by(name: @model)
-    scenario = Scenario.find_or_create_by(name: @scenario)
-    variable = Variable.find_or_create_by(name: @variable)
+    model = Model.where(name: @model).first
+    scenario = Scenario.where(name: @scenario).first
+    variable = Variable.where(name: @variable).first
 
     year_range, multi = 0
     

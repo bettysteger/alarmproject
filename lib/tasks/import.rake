@@ -2,26 +2,24 @@ namespace :db do
 
   require File.join(Rails.root + "lib/tasks/importer/importer")
   
-  desc "Get all clima data"
+  desc "Get clima data and push it into json files"
   task :get_data => :environment do
     start_time = Time.now
-    puts "start Import... at #{start_time}"
+    
+    puts "Start converting... at #{start_time}"
     
     source = Rails.env.test? ? "spec/fixtures" : "db/data"
+    
+  #  source = "spec/fixtures"
     folder = File.join(Rails.root + source)
     
-    Dir[folder + "/*.*"].each do |file|
-    #Parallel.each(Dir[folder + "/*.*"], :in_threads=>6) do |file|
-      start_file_time = Time.now
-      puts "start file..."
-      importer = Importer.new(folder, file)
-      importer.execute
-      puts "'#{File.basename(file)}' imported in #{(Time.now - start_file_time).round(2)} s"
-    end
-    puts "Import finished in #{(Time.now - start_time).round(2)} s"
+    prepare_import(folder)
+    execute_import(folder)
+
+    puts "Convert finished in #{(Time.now - start_time).round(2)} s"
   end
   
-  desc "Imports clima data in mongodb"
+  desc "Imports clima data from json files into mongo db"
   task :import => :environment do  
     start_time = Time.now
     
@@ -29,6 +27,30 @@ namespace :db do
     `mongoimport -d #{db_name} -c points db/data/json/*.points.json`
     
     puts "Import finished in #{(Time.now - start_time).round(2)} s"
+  end
+  
+  desc "All in-one importer"
+  task :full_import => [:environment, :get_data, :import]
+  
+  # prepare import (sequential)
+  def prepare_import(folder)
+     Dir[folder + "/*.*"].each do |file|
+       start_file_time = Time.now
+       importer = Importer.new(folder, file)
+       importer.prepare
+       puts "'#{File.basename(file)}' prepared for import in #{(Time.now - start_file_time).round(2)} s"
+    end
+  end
+  
+  # execute import (parallel)
+  def execute_import(folder)
+    Parallel.each(Dir[folder + "/*.*"]) do |file|
+      start_file_time = Time.now
+      puts "Start import file #{File.basename(file)}..."
+      importer = Importer.new(folder, file)
+      importer.execute
+      puts "'#{File.basename(file)}' converted into json for import in #{(Time.now - start_file_time).round(2)} s"
+    end
   end
   
   def db_name
