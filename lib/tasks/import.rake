@@ -33,7 +33,10 @@ namespace :db do
   end
   
   desc "All in-one importer"
-  task :full_import => [:environment, :get_data, :import]
+  task :full_import => :environment do
+    Rake::Task["db:get_data"].execute
+    Rake::Task["db:import"].execute
+  end
   
   
   # Helper methods:
