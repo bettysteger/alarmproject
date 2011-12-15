@@ -75,7 +75,7 @@ class Importer
               #               point: point, year: year, month: month, number: number) 
               value = {
                 year: year, month: month, number: number, 
-                model_id: model.id.to_s, scenario_id: scenario.id.to_s, variable_id: variable.id.to_s, point_id: point.id.to_s
+                model_id: model.id, scenario_id: scenario.id, variable_id: variable.id, point_id: point.id
               }
               write_to_json(value, "values")
                  
