@@ -44,13 +44,14 @@ class Importer
     line_counter, year, point = 0
     start_year = year_range.first
     end_year = year_range.last
+    filenumber = 1
     
     File.open(@filepath).each do |line|
         begin
           line_counter += 1
           next if line_counter <= 5 # ignore first lines
           
-          puts "working on line #{line_counter}..." if line_counter % 5000 == 0
+          puts "working on line #{line_counter}..." if line_counter % 10000 == 0
 
           if point?(line)
             year = start_year # sets year to start year
@@ -63,6 +64,7 @@ class Importer
           if year >= start_year && year <= end_year
 
             month = 1 # every line begins with month 1
+            filenumber += 1 if line_counter % 100000 == 0 # files should not be super big
             
             line.split(" ").each do |value|
               number = BigDecimal.new(value) * BigDecimal.new(multi)
@@ -77,7 +79,7 @@ class Importer
                 year: year, month: month, number: number, 
                 model_id: model.id, scenario_id: scenario.id, variable_id: variable.id, point_id: point.id
               }
-              write_to_json(value, "values")
+              write_to_json(value, "values", filenumber)
                  
               month += 1
             end
@@ -113,8 +115,8 @@ class Importer
       !!(line =~ /Grid-ref/)
     end
     
-    def write_to_json(hash, what)
-      File.open(json_path(what),"a+") { |f| f.write(JSON(hash) + "\n")}
+    def write_to_json(hash, what, no = 1)
+      File.open(json_path(no.to_s+what),"a+") { |f| f.write(JSON(hash) + "\n")}
     end
     
     def json_path(what)
