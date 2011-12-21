@@ -1,3 +1,6 @@
+dev_null = Logger.new("/dev/null")
+Rails.logger = dev_null
+
 namespace :db do
 
   require File.join(Rails.root + "lib/tasks/importer/importer")
