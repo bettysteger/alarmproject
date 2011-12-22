@@ -1,4 +1,5 @@
 class ValuesController < ApplicationController
+  respond_to :json
   
   def welcome
     render :text => "WELCOME"
@@ -6,11 +7,8 @@ class ValuesController < ApplicationController
   
   # all values for that model, scenario, year and month (and variable)
   def mapval
-    if params[:variable]
-      Value.mapval_variable(params)
-    else
-      Value.mapval_all(params)
-    end
+    values = params[:variable] ? Value.mapval_var(params) : Value.mapval_all(params)
+    respond_with(values)
   end
   
   # all aggregated (min, max or avg) values for that model, scenario, year and 12 months (and variable)

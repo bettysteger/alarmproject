@@ -1,4 +1,4 @@
-class Model
+class Model < Name
   include Mongoid::Document
   
   field :name, type: String

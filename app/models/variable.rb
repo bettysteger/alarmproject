@@ -1,4 +1,4 @@
-class Variable
+class Variable < Name
   include Mongoid::Document
   
   field :name, type: String

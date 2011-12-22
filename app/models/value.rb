@@ -18,31 +18,37 @@ class Value
   belongs_to :variable, index: true
   belongs_to :point, index: true
   
+  def self.mapval_var params
+    model = Model.find_by_name(params[:model])
+    scenario = Scenario.find_by_name(params[:scenario])
+    var = Variable.find_by_name(params[:variable])
+    values = Value.where(model_id: model, scenario_id: scenario, variable_id: var, year: params[:year], month: params[:month])
+    data = {}
+    data[params[:variable]] = values.map(&:number)
+    output_hash("val", params, data)
+  end
+  
   def self.mapval_all params
-    model = Model.where(name: params[:model]).first.id
-    scenario = Scenario.where(name: params[:scenario]).first.id
-    value = Value.where(model_id: model, scenario_id: scenario, year: params[:year], month: params[:month]).all.to_a
-    raise value.inspect
+    model = Model.find_by_name(params[:model])
+    scenario = Scenario.find_by_name(params[:scenario])
+    values = Value.where(model_id: model, scenario_id: scenario, year: params[:year], month: params[:month])
+    data = {}
+    Variable.all.each do |var|
+      data[var.name] = values.where(variable_id: var.id).map(&:number)
+    end
+    #raise output_hash("val", params, data).inspect
+    output_hash("val", params, data)
   end
   
-  def self.mapval_variable params
-    params[:model]
-    params[:scenario]
-    params[:year]
-    params[:month]
-    params[:variable]
-  end
+  private 
   
-  def self.output_hash
-    # {
-    #   "map":"val",
-    #   "model_name":"Europe", "scenario_name":"BAMBU",
-    #   "year":2011, "month":11,
-    #   "data": {
-    #     "pre":[[null,null,...],[...,null,122.3,118.8,130.1,null,...],...],
-    #     "tmp":[[null,null,...],[...,null,8.2,8.3,7.4,null,...],...]
-    #   }
-    # }
+  def self.output_hash what, params, data
+    {
+      map: what,
+      model_name: params[:model], scenario_name: params[:scenario],
+      year: params[:year], month: params[:month],
+      data: data
+    }
   end
-  
+
 end

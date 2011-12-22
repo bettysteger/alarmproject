@@ -1,9 +1,11 @@
 Alarmproject::Application.routes.draw do
   
   root :to => 'values#welcome'
+  # match ':controller(/:action(/:id(.:format)))'
   
   # all values for that model, scenario, year and month (and variable)
-  match 'mapval/:model/:scenario/:year/:month/(:variable)' => 'values#mapval' # , :variable => /tmp|pre/
+  match 'mapval/:model/:scenario/:year/:month/all' => 'values#mapval'
+  match 'mapval/:model/:scenario/:year/:month/:variable' => 'values#mapval'
   
   # all aggregated (min, max or avg) values for that model, scenario, year and 12 months (and variable)
   match 'mapval/:model/:scenario/:year/:function/(:variable)' => 'values#mapvalagr', :function => /min|max|avg/

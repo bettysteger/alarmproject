@@ -1,4 +1,4 @@
-class Scenario
+class Scenario < Name
   include Mongoid::Document
 
   field :name, type: String
