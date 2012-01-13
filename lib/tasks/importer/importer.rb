@@ -81,7 +81,7 @@ class Importer
               end
                             
               value = {
-                year: year, month: month, number: number, 
+                year: year, month: month, number: number.to_f, 
                 model_id: model.id, scenario_id: scenario.id, variable_id: variable.id, point_id: point.id
               }
               value_hashes << JSON(value) + "\n"

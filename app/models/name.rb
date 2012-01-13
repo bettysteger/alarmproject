@@ -1,5 +1,7 @@
 class Name
   def self.find_by_name name
-    self.where(name: name).first.id
+    object = self.only(:id).where(name: name)
+    raise "Error: #{self.name} nicht in der DB" unless object.first
+    object.first.id
   end
 end

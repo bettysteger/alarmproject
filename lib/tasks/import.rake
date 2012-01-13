@@ -25,11 +25,12 @@ namespace :db do
   task :import => :environment do  
     start_time = Time.now
     
-    Dir[@folder + "/json/*values.json"].each do |file|
-      `mongoimport -d #{db_name} -c values #{file}`
-    end
     Dir[@folder + "/json/*points.json"].each do |file|
       `mongoimport -d #{db_name} -c points #{file}`
+    end
+    
+    Dir[@folder + "/json/*values.json"].each do |file|
+      `mongoimport -d #{db_name} -c values #{file}`
     end
     
     puts "Import finished in #{(Time.now - start_time).round(2)} s"

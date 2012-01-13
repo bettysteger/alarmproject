@@ -11,6 +11,6 @@ class Point
   has_many :values
   
   def to_hash
-    {x: x, y: y}
+    {_id: id, x: x, y: y}
   end
 end
