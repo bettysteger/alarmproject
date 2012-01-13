@@ -13,16 +13,8 @@ class ValuesController < ApplicationController
   
   # all aggregated (min, max or avg) values for that model, scenario, year and 12 months (and variable)
   def mapvalagr
-    params[:model]
-    params[:scenario]
-    params[:year]
-    params[:month]
-    params[:function]
-    if params[:variable]
-      
-    else
-      
-    end
+    values = params[:variable] ? Value.mapvalagr_var(params) : Value.mapvalagr_all(params)
+    respond_with(values)
   end
   
   # difference values for 2 specific months
