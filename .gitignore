@@ -7,9 +7,11 @@
 # Ignore bundler config
 /.bundle
 
-# Ignore the default SQLite database.
-/db/*.sqlite3
+# Ignore the default  database stuff.
 /db/data
+/db/mongod.lock
+/db/journal
+/db/alarmproject_*.*
 
 # Ignore all logfiles and tempfiles.
 /log/*.log

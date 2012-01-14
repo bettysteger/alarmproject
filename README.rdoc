@@ -1,9 +1,17 @@
-== alarmproject
+= alarmproject
 
 * this project has a heavy database
-* we are exploring how to work with lots of data with Rails 3 and MySQL or PostgreSQL or MongoDB
+* we are exploring how to work with lots of data with Rails 3 and MongoDB
 * our data is located in db/data (1,14 GB) .. this folder is in the gitignore, see below where you can download the data
+* example data for testing is located in test/fixtures
 
+== usage
+get data into json files:
+  rake db:get_data
+then start mongo server:
+  rake db:mongo:start
+import json objects in mongodb
+  rake db:import
 
 == ALARM observed and scenario climate data
 
@@ -18,13 +26,12 @@ Fronzek et al. (2011), with additional methodological information
 provided in Mitchell et al (2004).
 The data are downloadable from: http://www.alarmproject.net/alarm
 
-*** pre ... precipitation [mm]
-http://www.alarmproject.net/climate/climate/monthly/GRAS.A1FI.HadCM3.2001-2100.pre.tgz
-http://www.alarmproject.net/climate/climate/monthly/SEDG.B1.HadCM3.2001-2100.pre.tgz
-http://www.alarmproject.net/climate/climate/monthly/BAMBU.A2.HadCM3.2001-2100.pre.tgz
+* pre ... precipitation [mm]
+  * http://www.alarmproject.net/climate/climate/monthly/GRAS.A1FI.HadCM3.2001-2100.pre.tgz
+  * http://www.alarmproject.net/climate/climate/monthly/SEDG.B1.HadCM3.2001-2100.pre.tgz
+  * http://www.alarmproject.net/climate/climate/monthly/BAMBU.A2.HadCM3.2001-2100.pre.tgz
 
-*** tmp ... near-surface temperature [° Celsius]
-http://www.alarmproject.net/climate/climate/monthly/GRAS.A1FI.HadCM3.2001-2100.tmp.tgz
-http://www.alarmproject.net/climate/climate/monthly/SEDG.B1.HadCM3.2001-2100.tmp.tgz
-http://www.alarmproject.net/climate/climate/monthly/BAMBU.A2.HadCM3.2001-2100.tmp.tgz
-
+* tmp ... near-surface temperature [° Celsius]
+  * http://www.alarmproject.net/climate/climate/monthly/GRAS.A1FI.HadCM3.2001-2100.tmp.tgz
+  * http://www.alarmproject.net/climate/climate/monthly/SEDG.B1.HadCM3.2001-2100.tmp.tgz
+  * http://www.alarmproject.net/climate/climate/monthly/BAMBU.A2.HadCM3.2001-2100.tmp.tgz

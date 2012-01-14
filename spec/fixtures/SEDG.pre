@@ -1,0 +1,8 @@
+ALARM climate scenario created on Tue Jul 26 13:05:58 FLEDT 2005
+.pre = precipitation (mm)
+SRES=B1 GCM=HadCM3 Period=2001-2100 Variable=.pre Variability=2x1951-2000
+[Long= -11.00,  32.00] [Lati=  34.00,  72.00] [Grid X,Y= 258, 228]
+[Boxes=   31143] [Years=2001-2002] [Multi=    0.1000] [Missing=-999]
+Grid-ref=   4, 109
+ 1919 1476 1010  796  847  609  574 1549 1816 1745 1692 2406
+ 1780  427 1092  940  683  845  240  866  693 1845 1128 1735
