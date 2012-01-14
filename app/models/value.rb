@@ -76,6 +76,157 @@ class Value
     output_hash("val", params, data)
   end
   
+  def self.mapdiff_var params
+    model = Model.find_id_by_name(params[:model])
+    scenario = Scenario.find_id_by_name(params[:scenario])
+    var = Variable.find_id_by_name(params[:variable])
+    year1 = params[:year1]
+    year2 = params[:year2]
+    month1 = params[:month1]
+    month2 = params[:month2]
+    
+    data = {}
+    data[params[:variable]] = []
+    
+    values1 = Value.only(:number, :point_id).where(model_id: model, scenario_id: scenario, variable_id: var, year: year1, month: month1)
+    hash1 = values1.group_by(&:point_id)
+    
+    values2 = Value.only(:number, :point_id).where(model_id: model, scenario_id: scenario, variable_id: var, year: year2, month: month2)
+    hash2 = values2.group_by(&:point_id)
+    
+    hash1.each do |key1,values1|
+      hash2.each do |key2, values2|
+        if key1 == key2
+          values1.each_with_index do |val1, index|
+            data[params[:variable]] << val1.number - values2[index].number
+          end
+        end
+      end
+    end
+    output_hash("diff", params, data)
+  end
+
+  def self.mapdiff_all params
+    model = Model.find_id_by_name(params[:model])
+    scenario = Scenario.find_id_by_name(params[:scenario])
+    year1 = params[:year1]
+    year2 = params[:year2]
+    month1 = params[:month1]
+    month2 = params[:month2]
+    
+    data = {}
+
+    Variable.all.each do |var|
+      data[var.name] = []
+      values1 = Value.only(:number, :point_id).where(model_id: model, scenario_id: scenario, variable_id: var.id, year: year1, month: month1)
+      hash1 = values1.group_by(&:point_id)
+      
+      values2 = Value.only(:number, :point_id).where(model_id: model, scenario_id: scenario, variable_id: var.id, year: year2, month: month2)
+      hash2 = values2.group_by(&:point_id)
+    
+      hash1.each do |key1,values1|
+        hash2.each do |key2, values2|
+          if key1 == key2
+            values1.each_with_index do |val1, index|
+              data[var.name] << val1.number - values2[index].number
+            end
+          end
+        end
+      end
+    end
+    output_hash("diff", params, data)
+  end
+  
+  def self.mapdiffagr_var params
+    model = Model.find_id_by_name(params[:model])
+    scenario = Scenario.find_id_by_name(params[:scenario])
+    var = Variable.find_id_by_name(params[:variable])
+    year1 = params[:year1]
+    year2 = params[:year2]
+    function1 = params[:function1]
+    function2 = params[:function2]
+
+    data = {}
+    data[params[:variable]] = []
+    
+    values1 = Value.only(:number, :point_id).where(model_id: model, scenario_id: scenario, variable_id: var, year: year1)
+    hash1 = values1.asc(:number).group_by(&:point_id)
+    
+    values2 = Value.only(:number, :point_id).where(model_id: model, scenario_id: scenario, variable_id: var, year: year2)
+    hash2 = values2.asc(:number).group_by(&:point_id)
+
+    hash1.each do |key1,values1|
+      hash2.each do |key2, values2|
+        if key1 == key2
+          case function1
+            when "min"
+              number1 = values1.first.number
+            when "max"
+              number1 = values1.last.number
+            when "avg"
+              number1 = values1.collect(&:number).sum.to_f/values1.length
+          end
+          case function2
+            when "min"
+              number2 = values2.first.number
+            when "max"
+              number2 = values2.last.number
+            when "avg"
+              number2 = values2.collect(&:number).sum.to_f/values2.length
+          end
+          data[params[:variable]] << number1 - number2
+        end
+      end
+    end
+    output_hash("val", params, data)
+  end
+
+  def self.mapdiffagr_all params
+    model = Model.find_id_by_name(params[:model])
+    scenario = Scenario.find_id_by_name(params[:scenario])
+    year1 = params[:year1]
+    year2 = params[:year2]
+    function1 = params[:function1]
+    function2 = params[:function2]
+    
+    data = {}
+
+    Variable.all.each do |var|
+      data[var.name] = []
+      
+      values1 = Value.only(:number, :point_id).where(model_id: model, scenario_id: scenario, variable_id: var.id, year: year1)
+      hash1 = values1.asc(:number).group_by(&:point_id)
+    
+      values2 = Value.only(:number, :point_id).where(model_id: model, scenario_id: scenario, variable_id: var.id, year: year2)
+      hash2 = values2.asc(:number).group_by(&:point_id)
+      
+      hash1.each do |key1,values1|
+        hash2.each do |key2, values2|
+          if key1 == key2
+            case function1
+              when "min"
+                number1 = values1.first.number
+              when "max"
+                number1 = values1.last.number
+              when "avg"
+                number1 = values1.collect(&:number).sum.to_f/values1.length
+            end
+            case function2
+              when "min"
+                number2 = values2.first.number
+              when "max"
+                number2 = values2.last.number
+              when "avg"
+                number2 = values2.collect(&:number).sum.to_f/values2.length
+            end
+            data[var.name] << number1 - number2
+          end
+        end
+      end
+    end
+    output_hash("val", params, data)
+  end
+  
   private 
   
   def self.output_hash what, params, data

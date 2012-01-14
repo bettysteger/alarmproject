@@ -25,11 +25,8 @@ class ValuesController < ApplicationController
     params[:month1]
     params[:year2]
     params[:month2]
-    if params[:variable]
-      
-    else
-      
-    end
+    values = params[:variable] ? Value.mapdiff_var(params) : Value.mapdiff_all(params)
+    respond_with(values)
   end
   
   # aggregated difference values for 2 specific years
@@ -40,11 +37,8 @@ class ValuesController < ApplicationController
     params[:function1]
     params[:year2]
     params[:function2]
-    if params[:variable]
-      
-    else
-      
-    end
+    values = params[:variable] ? Value.mapdiffagr_var(params) : Value.mapdiffagr_all(params)
+    respond_with(values)
   end
   
   
