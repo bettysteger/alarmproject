@@ -19,6 +19,8 @@ class Value
   belongs_to :variable, index: true
   belongs_to :point, index: true
   
+  # matrices methods
+  
   def self.mapval_var params
     values = get_values(params)
     data = {}
@@ -192,6 +194,33 @@ class Value
     output_hash("diff", params, data)
   end
   
+  # properties methods
+  
+  def self.propval params
+    
+    # without group by point
+    values = get_values(params).asc(:number)
+    data = {}
+    data["min"] = values.first.number
+    data["max"] = values.last.number
+    data["avg"] = values.collect(&:number).sum.to_f/values.length
+    
+    # with group by point
+    # hash = values.asc(:number).group_by(&:point_id)
+    # 
+    # data = {}
+    # data["min"] = []
+    # data["max"] = []
+    # data["avg"] = []
+    # 
+    # hash.each do |k,v|
+    #   data["min"] << v.first.number
+    #   data["max"] << v.last.number
+    #   data["avg"] << v.collect(&:number).sum.to_f/v.length
+    # end
+    output_hash("propval", params, data)
+  end  
+  
   private 
   
   # if there is an var_id passed then we want that id, if not the params[:variable] is used
@@ -205,8 +234,9 @@ class Value
     month = params["month#{no}"]
     
     v = Value.only(:number, :point_id)
-    v.where(month: month) if month # for aggregated values
-    v.where(model_id: model_id, scenario_id: scenario_id, variable_id: var_id, year: year)
+    v = v.where(year: year) if year # for /propval/Mo/Sc/all/all/Var.Out
+    v = v.where(month: month) if month # for aggregated values
+    v.where(model_id: model_id, scenario_id: scenario_id, variable_id: var_id)
   end
   
   def self.output_hash what, params, data
