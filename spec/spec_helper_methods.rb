@@ -32,20 +32,20 @@ module SpecHelperMethods
       Value.create!(year: 2001, month: 1, number: 1, model_id: model.id, 
                     scenario_id: scenario1.id, variable_id: variable1.id,
                     point_id: point1.id)
-      Value.create!(year: 2002, month: 2, number: 2, model_id: model.id, 
+      Value.create!(year: 2001, month: 2, number: 2, model_id: model.id, 
                     scenario_id: scenario1.id, variable_id: variable1.id,
                     point_id: point1.id)
-      Value.create!(year: 2003, month: 3, number: 3, model_id: model.id, 
+      Value.create!(year: 2001, month: 3, number: 3, model_id: model.id, 
                     scenario_id: scenario1.id, variable_id: variable1.id,
                     point_id: point1.id)
 
       Value.create!(year: 2001, month: 1, number: 4, model_id: model.id, 
                     scenario_id: scenario1.id, variable_id: variable1.id,
                     point_id: point2.id)
-      Value.create!(year: 2002, month: 2, number: 5, model_id: model.id, 
+      Value.create!(year: 2001, month: 2, number: 5, model_id: model.id, 
                     scenario_id: scenario1.id, variable_id: variable1.id,
                     point_id: point2.id)
-      Value.create!(year: 2003, month: 3, number: 6, model_id: model.id, 
+      Value.create!(year: 2001, month: 3, number: 6, model_id: model.id, 
                     scenario_id: scenario1.id, variable_id: variable1.id,
                     point_id: point2.id)
       
@@ -53,20 +53,20 @@ module SpecHelperMethods
       Value.create!(year: 2001, month: 1, number: 7, model_id: model.id, 
                     scenario_id: scenario1.id, variable_id: variable2.id,
                     point_id: point1.id)
-      Value.create!(year: 2002, month: 2, number: 8, model_id: model.id, 
+      Value.create!(year: 2001, month: 2, number: 8, model_id: model.id, 
                     scenario_id: scenario1.id, variable_id: variable2.id,
                     point_id: point1.id)
-      Value.create!(year: 2003, month: 3, number: 9, model_id: model.id, 
+      Value.create!(year: 2001, month: 3, number: 9, model_id: model.id, 
                     scenario_id: scenario1.id, variable_id: variable2.id,
                     point_id: point1.id)
 
       Value.create!(year: 2001, month: 1, number: 10, model_id: model.id, 
                     scenario_id: scenario1.id, variable_id: variable2.id,
                     point_id: point2.id)
-      Value.create!(year: 2002, month: 2, number: 11, model_id: model.id, 
+      Value.create!(year: 2001, month: 2, number: 11, model_id: model.id, 
                     scenario_id: scenario1.id, variable_id: variable2.id,
                     point_id: point2.id)
-      Value.create!(year: 2003, month: 3, number: 12, model_id: model.id, 
+      Value.create!(year: 2001, month: 3, number: 12, model_id: model.id, 
                     scenario_id: scenario1.id, variable_id: variable2.id,
                     point_id: point2.id)
     end

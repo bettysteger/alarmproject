@@ -1,5 +1,4 @@
 require 'spec_helper'
-require File.join(Rails.root + "spec/spec_helper_methods")
 
 describe Value do
   
@@ -47,21 +46,5 @@ describe Value do
     end
 
   end
-  
-  describe "mapval" do
-    
-    before(:each) do
-      create_dummy_data
-    end
-
-    it "should return right result: mapval_var" do
-      result = Value.mapval_var(model: "Europe", scenario: "BAMBU", year: 2001, month: 2, variable: "pre")
-      result.kind_of?(Hash).should == true
-      result.should == "lsdfk"
-    end
-  end
-
-  private
-    include SpecHelperMethods
 
 end
