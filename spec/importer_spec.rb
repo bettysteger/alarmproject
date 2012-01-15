@@ -1,5 +1,6 @@
 require 'spec_helper'
 require File.join(Rails.root + "lib/tasks/importer/importer")
+require File.join(Rails.root + "spec/spec_helper_methods")
 
 describe Importer do
   
@@ -108,23 +109,7 @@ describe Importer do
   end
   
   private
-    def nothing_in_db
-      Model.all.count.should == 0
-      Point.all.count.should == 0
-      Scenario.all.count.should == 0
-      Value.all.count.should == 0
-      Variable.all.count.should == 0
-    end
-    
-    # delete json directory to cleanup
-    def delete_json_directory
-      Dir[@folder + "/json/*.json"].each do |file|
-        File.delete(file)
-      end
-      Dir.delete(@folder + "/json")
-    end
-    
-    def db_name
-      Rails.application.class.parent_name.downcase + "_" + Rails.env
-    end
+  
+      include SpecHelperMethods
+   
 end
