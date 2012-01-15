@@ -1,0 +1,13 @@
+ALARM climate scenario created on Wed Sep 21 12:48:02 FLEDT 2005
+.gdd = growing-degree-days Tb=5oC
+ALARM=BAMBU SRES=A2 GCM=HadCM3 Period=2001-2100 Variable=.gdd Variability=2x1951-2000
+[Long= -11.00,  32.00] [Lati=  34.00,  72.00] [Grid X,Y= 258, 228]
+[Boxes=   31143] [Years=2001-2003] [Multi=    1.0000] [Missing=-999]
+Grid-ref=   4, 109
+   53   27   52  101  168  255  316  292  252  208  136   91
+   45   63  113  130  220  237  332  319  207  192   95   78
+   76   67   82   98  220  243  298  310  273  189  142  138
+Grid-ref=   5, 108
+   53   27   52   98  168  261  323  295  252  208  136   91
+   48   63  116  130  217  243  338  319  210  192   95   79
+   78   70   82   95  220  246  304  310  273  189  142  138
