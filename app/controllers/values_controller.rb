@@ -19,26 +19,19 @@ class ValuesController < ApplicationController
   
   # difference values for 2 specific months
   def mapdiff
-    params[:model]
-    params[:scenario]
-    params[:year1]
-    params[:month1]
-    params[:year2]
-    params[:month2]
     values = params[:variable] ? Value.mapdiff_var(params) : Value.mapdiff_all(params)
     respond_with(values)
   end
   
   # aggregated difference values for 2 specific years
   def mapdiffagr
-    params[:model]
-    params[:scenario]
-    params[:year1]
-    params[:function1]
-    params[:year2]
-    params[:function2]
     values = params[:variable] ? Value.mapdiffagr_var(params) : Value.mapdiffagr_all(params)
     respond_with(values)
+  end
+  
+  def propval
+    values = Value.propval(params)
+    respond_with(values) 
   end
   
   
