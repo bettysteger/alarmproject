@@ -25,7 +25,7 @@ class Value
     values = get_values(params)
     data = {}
     data[params[:variable]] = values.map(&:number)
-    output_hash_val(params, data)
+    output_hash("val", params, data)
   end
   
   def self.mapval_all params
@@ -34,7 +34,7 @@ class Value
       values = get_values(params, var.id)
       data[var.name] = values.map(&:number)
     end
-    output_hash_val(params, data)
+    output_hash("val", params, data)
   end
   
   def self.mapvalagr_var params
@@ -49,7 +49,7 @@ class Value
       data[params[:variable]] << v.last.number if params[:function] == "max"
       data[params[:variable]] << v.collect(&:number).sum.to_f/v.length if params[:function] == "avg"
     end
-    output_hash_val(params, data)
+    output_hash("val", params, data)
   end
   
   def self.mapvalagr_all params
@@ -64,7 +64,7 @@ class Value
         data[var.name] << v.collect(&:number).sum.to_f/v.length if params[:function] == "avg"
       end
     end
-    output_hash_val(params, data)
+    output_hash("val", params, data)
   end
   
   def self.mapdiff_var params
@@ -86,7 +86,7 @@ class Value
         end
       end
     end
-    output_hash_diff(params, data)
+    output_hash("diff", params, data)
   end
 
   def self.mapdiff_all params
@@ -110,7 +110,7 @@ class Value
         end
       end
     end
-    output_hash_diff(params, data)
+    output_hash("diff", params, data)
   end
   
   def self.mapdiffagr_var params
@@ -149,7 +149,7 @@ class Value
         end
       end
     end
-    output_hash_diff(params, data)
+    output_hash("diff", params, data)
   end
 
   def self.mapdiffagr_all params
@@ -191,7 +191,7 @@ class Value
         end
       end
     end
-    output_hash_diff(params, data)
+    output_hash("diff", params, data)
   end
   
   # properties methods
@@ -239,44 +239,13 @@ class Value
     v.where(model_id: model_id, scenario_id: scenario_id, variable_id: var_id)
   end
   
-  def self.output_hash_val params, data
-    if params[:month] 
-      {
-        map: "val",
-        model_name: params[:model], scenario_name: params[:scenario],
-        year: params[:year], 
-        month: params[:month],
-        data: data
-      }
-     elsif params[:function]
-       {
-        map: "val",
-        model_name: params[:model], scenario_name: params[:scenario],
-        year: params[:year], 
-        function: params[:function],
-        data: data
-      }
-     end
-  end
-
-  def self.output_hash_diff params, data
-    if params[:month1]
-    {
-      map: "diff",
-      model_name: params[:model], scenario_name: params[:scenario],
-      year1: params[:year1], month1: params[:month1],
-      year2: params[:year2], month2: params[:month2],
-      data: data
-    }
-    elsif params[:function1]
-    {
-      map: "diff",
-      model_name: params[:model], scenario_name: params[:scenario],
-      year1: params[:year1], function1: params[:function1],
-      year2: params[:year2], function2: params[:function2],
-      data: data
-    }
-    end
+  def self.output_hash what, params, data
+    hash = {map: what, model_name: params[:model], scenario_name: params[:scenario]}
+    hash.merge!({ year: params[:year], month: params[:month] }) if params[:month]
+    hash.merge!({ year: params[:year], function: params[:function] }) if params[:function]
+    hash.merge!({ year1: params[:year1], month1: params[:month1], year2: params[:year2], month2: params[:month2]}) if params[:year1] && params[:month1]
+    hash.merge!({ year1: params[:year1], function1: params[:function1], year2: params[:year2], function2: params[:function2]}) if params[:year1] && params[:function1]
+    hash.merge!({data: data})
   end
   
   def self.output_hash_propval params, data
