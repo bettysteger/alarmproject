@@ -35,65 +35,65 @@ describe ValuesController do
 
   end
   
-  describe "mapvalagr" do
+  describe "mapvalaggr" do
     
-    it "should render right result: mapvalagr_var min" do
+    it "should render right result: mapvalaggr_var min" do
       expected = {
         map: "val", model_name: "Europe", scenario_name: "BAMBU", year: "2001", function: "min",
         data: { pre: [1.0, 4.0] }
       }.to_json
 
-      get :mapvalagr, model: "Europe", scenario: "BAMBU", year: 2001, function: "min", variable: "pre", format: :json
+      get :mapvalaggr, model: "Europe", scenario: "BAMBU", year: 2001, function: "min", variable: "pre", format: :json
       response.body.should == expected
     end
     
-    it "should render right result: mapvalagr_var max" do
+    it "should render right result: mapvalaggr_var max" do
       expected = {
         map: "val", model_name: "Europe", scenario_name: "BAMBU", year: "2001", function: "max",
         data: { pre: [3.0, 6.0] }
       }.to_json
 
-      get :mapvalagr, model: "Europe", scenario: "BAMBU", year: 2001, function: "max", variable: "pre", format: :json
+      get :mapvalaggr, model: "Europe", scenario: "BAMBU", year: 2001, function: "max", variable: "pre", format: :json
       response.body.should == expected
     end
     
-    it "should render right result: mapvalagr_var avg" do
+    it "should render right result: mapvalaggr_var avg" do
       expected = {
         map: "val", model_name: "Europe", scenario_name: "BAMBU", year: "2001", function: "avg",
         data: { pre: [2.0, 5.0] }
       }.to_json
 
-      get :mapvalagr, model: "Europe", scenario: "BAMBU", year: 2001, function: "avg", variable: "pre", format: :json
+      get :mapvalaggr, model: "Europe", scenario: "BAMBU", year: 2001, function: "avg", variable: "pre", format: :json
       response.body.should == expected
     end
     
-    it "should render right result: mapvalagr_all min" do
+    it "should render right result: mapvalaggr_all min" do
       expected = {
         map: "val", model_name: "Europe", scenario_name: "BAMBU", year: "2001", function: "min",
         data: { pre: [1.0, 4.0], tmp: [7.0, 10.0] }
       }.to_json
 
-      get :mapvalagr, model: "Europe", scenario: "BAMBU", year: 2001, function: "min", format: :json
+      get :mapvalaggr, model: "Europe", scenario: "BAMBU", year: 2001, function: "min", format: :json
       response.body.should == expected
     end
     
-    it "should render right result: mapvalagr_all max" do
+    it "should render right result: mapvalaggr_all max" do
       expected = {
         map: "val", model_name: "Europe", scenario_name: "BAMBU", year: "2001", function: "max",
         data: { pre: [3.0, 6.0], tmp: [9.0, 12.0] }
       }.to_json
 
-      get :mapvalagr, model: "Europe", scenario: "BAMBU", year: 2001, function: "max", format: :json
+      get :mapvalaggr, model: "Europe", scenario: "BAMBU", year: 2001, function: "max", format: :json
       response.body.should == expected
     end
     
-    it "should render right result: mapvalagr_all avg" do
+    it "should render right result: mapvalaggr_all avg" do
       expected = {
         map: "val", model_name: "Europe", scenario_name: "BAMBU", year: "2001", function: "avg",
         data: { pre: [2.0, 5.0], tmp: [8.0, 11.0] }
       }.to_json
 
-      get :mapvalagr, model: "Europe", scenario: "BAMBU", year: 2001, function: "avg", format: :json
+      get :mapvalaggr, model: "Europe", scenario: "BAMBU", year: 2001, function: "avg", format: :json
       response.body.should == expected
     end
 
@@ -123,25 +123,25 @@ describe ValuesController do
   
   end
   
-  describe "mapdiffagr" do
+  describe "mapdiffaggr" do
   
-    it "should render right result: mapdiffagr_var" do
+    it "should render right result: mapdiffaggr_var" do
       expected = {
         map: "diff", model_name: "Europe", scenario_name: "BAMBU", year1: "2001", function1: "max", year2: "2001", function2: "min",
         data: { pre: [2.0, 2.0] }
       }.to_json
 
-      get :mapdiffagr, model: "Europe", scenario: "BAMBU", year1: 2001, function1: "max", year2: 2001, function2: "min", variable: "pre", format: :json
+      get :mapdiffaggr, model: "Europe", scenario: "BAMBU", year1: 2001, function1: "max", year2: 2001, function2: "min", variable: "pre", format: :json
       response.body.should == expected
     end
     
-    it "should render right result: mapdiffagr_all" do
+    it "should render right result: mapdiffaggr_all" do
       expected = {
         map: "diff", model_name: "Europe", scenario_name: "BAMBU", year1: "2001", function1: "max", year2: "2001", function2: "avg",
         data: { pre: [1.0, 1.0], tmp: [1.0, 1.0] }
       }.to_json
 
-      get :mapdiffagr, model: "Europe", scenario: "BAMBU", year1: 2001, function1: "max", year2: 2001, function2: "avg", format: :json
+      get :mapdiffaggr, model: "Europe", scenario: "BAMBU", year1: 2001, function1: "max", year2: 2001, function2: "avg", format: :json
       response.body.should == expected
     end
     

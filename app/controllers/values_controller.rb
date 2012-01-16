@@ -7,56 +7,36 @@ class ValuesController < ApplicationController
   
   # all values for that model, scenario, year and month (and variable)
   def mapval
-    values = params[:variable] ? Value.mapval_var(params) : Value.mapval_all(params)
+    values = params[:variable] ? Map.mapval_var(params) : Map.mapval_all(params)
     respond_with(values)
   end
   
   # all aggregated (min, max or avg) values for that model, scenario, year and 12 months (and variable)
-  def mapvalagr
-    values = params[:variable] ? Value.mapvalagr_var(params) : Value.mapvalagr_all(params)
+  def mapvalaggr
+    values = params[:variable] ? Map.mapvalaggr_var(params) : Map.mapvalaggr_all(params)
     respond_with(values)
   end
   
   # difference values for 2 specific months
   def mapdiff
-    values = params[:variable] ? Value.mapdiff_var(params) : Value.mapdiff_all(params)
+    values = params[:variable] ? Map.mapdiff_var(params) : Map.mapdiff_all(params)
     respond_with(values)
   end
   
   # aggregated difference values for 2 specific years
-  def mapdiffagr
-    values = params[:variable] ? Value.mapdiffagr_var(params) : Value.mapdiffagr_all(params)
+  def mapdiffaggr
+    values = params[:variable] ? Map.mapdiffaggr_var(params) : Map.mapdiffaggr_all(params)
     respond_with(values)
   end
   
   def propval
-    values = Value.propval(params)
+    values = Prop.propval(params)
     respond_with(values) 
   end
   
+  def propdiff
+    values = params[:function1] ? Prop.propdiffaggr(params) : Prop.propdiff(params)
+    respond_with(values) 
+  end
   
 end
-
-__END__
-
-{
-"map":"val",
-"model_name":"Europe", "scenario_name":"BAMBU",
-"year":2011, "month":11,
-"data":{
-"pre":[[null,null,...],[...,null,122.3,118.8,130.1,null,...],...],
-"tmp":[[null,null,...],[...,null,8.2,8.3,7.4,null,...],...]
-}
-}
-
-# all values for that model, scenario, year and month (and variable)
-match 'mapval/:model/:scenario/:year/:month/(:variable)' => 'values#mapval' # , :variable => /tmp|pre/
-
-# all aggregated (min, max or avg) values for that model, scenario, year and 12 months (and variable)
-match 'mapval/:model/:scenario/:year/:function/(:variable)' => 'values#mapvalagr', :function => /min|max|avg/
-
-# difference values for 2 specific months
-match 'mapdiff/:model/:scenario/:year1/:month1/:year2/:month2/(:variable)' => 'values#mapdiff'
-  
-# aggregated difference values for 2 specific years
-match 'mapdiff/:model/:scenario/:year1/:function1/:year2/:function2/(:variable)' => 'values#mapdiffagr'

@@ -1,0 +1,66 @@
+class Value
+  include Mongoid::Document
+  include Mongoid::MapReduce
+
+  field :year,    type: Integer
+  field :month,   type: Integer
+  field :number,  type: Float
+
+  validates :year,      presence: true
+  validates :month,     presence: true
+  validates :number,    presence: true
+  validates :model,     presence: true
+  validates :scenario,  presence: true
+  validates :variable,  presence: true
+  validates :point,     presence: true
+  
+  belongs_to :model, index: true
+  belongs_to :scenario, index: true
+  belongs_to :variable, index: true
+  belongs_to :point, index: true
+  
+  private 
+  
+  # if there is an var_id passed then we want that id, if not the params[:variable] is used
+  # if there is a number (no) passed then we have params[:year1] and params[:year2] (used for diff values)
+  def self.get_values params, var_id=false, no=""
+    model_id = Model.find_id_by_name(params[:model])
+    scenario_id = Scenario.find_id_by_name(params[:scenario])
+    var_id = Variable.find_id_by_name(params[:variable]) if params[:variable]
+    
+    year = params["year#{no}"]
+    month = params["month#{no}"]
+    
+    v = Value.only(:number, :point_id)
+    v = v.where(year: year) if year # for /propval/Mo/Sc/all/all/Var.Out
+    v = v.where(month: month) if month # for aggregated values
+    v.where(model_id: model_id, scenario_id: scenario_id, variable_id: var_id)
+  end
+  
+  def self.avg(array)
+    array.collect(&:number).sum.to_f/array.length
+  end
+  
+  def self.get_aggr(function, values)
+    case function
+      when "min"
+        values.first.number
+      when "max"
+        values.last.number
+      when "avg"
+        avg(values)
+    end
+  end
+  
+  def self.output_hash info, params, data, what="map"
+    hash = {}
+    hash[what] = info
+    hash.merge!({model_name: params[:model], scenario_name: params[:scenario]})
+    hash.merge!({ year: params[:year], month: params[:month] }) if params[:month]
+    hash.merge!({ year: params[:year], function: params[:function] }) if params[:function]
+    hash.merge!({ year1: params[:year1], month1: params[:month1], year2: params[:year2], month2: params[:month2]}) if params[:year1] && params[:month1]
+    hash.merge!({ year1: params[:year1], function1: params[:function1], year2: params[:year2], function2: params[:function2]}) if params[:year1] && params[:function1]
+    hash.merge!({data: data})
+  end
+
+end
