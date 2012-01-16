@@ -56,10 +56,12 @@ class Value
     hash = {}
     hash[what] = info
     hash.merge!({model_name: params[:model], scenario_name: params[:scenario]})
-    hash.merge!({ year: params[:year], month: params[:month] }) if params[:month]
-    hash.merge!({ year: params[:year], function: params[:function] }) if params[:function]
-    hash.merge!({ year1: params[:year1], month1: params[:month1], year2: params[:year2], month2: params[:month2]}) if params[:year1] && params[:month1]
+    hash.merge!({ year: params[:year]}) if params[:year]
+    hash.merge!({ month: params[:month] }) if params[:month]
+    hash.merge!({ function: params[:function] }) if params[:function]
     hash.merge!({ year1: params[:year1], function1: params[:function1], year2: params[:year2], function2: params[:function2]}) if params[:year1] && params[:function1]
+    hash.merge!({ year1: params[:year1], month1: params[:month1], year2: params[:year2], month2: params[:month2]}) if params[:year1] && params[:month1]
+    hash.merge!({ year1: params[:year1], year2: params[:year2]}) if params[:year1] && params[:year2] && !params[:month1] && !params[:function1]
     hash.merge!({data: data})
   end
 

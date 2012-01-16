@@ -146,8 +146,73 @@ describe ValuesController do
     end
     
   end
-
   
+  describe "propval" do
+    
+    it "should render right result: propval month variable" do
+      expected = {
+        prop: "val", model_name: "Europe", scenario_name: "BAMBU", year: "2001", month: "1",
+        data: { pre: { min: 1.0, max: 4.0, avg: 2.5 } }
+      }.to_json
+
+      get :propval, model: "Europe", scenario: "BAMBU", year: 2001, month: 1, variable: "pre", format: :json
+      response.body.should == expected
+    end
+    
+    it "should render right result: propval month all" do
+      expected = {
+        prop: "val", model_name: "Europe", scenario_name: "BAMBU", year: "2001",
+        data: { pre: { min: 1.0, max: 6.0, avg: 3.5 } }
+      }.to_json
+
+      get :propval, model: "Europe", scenario: "BAMBU", year: 2001, variable: "pre", format: :json
+      response.body.should == expected
+    end
+    
+    it "should render right result: propval month all year all" do
+      expected = {
+        prop: "val", model_name: "Europe", scenario_name: "BAMBU",
+        data: { pre: { min: 1.0, max: 26.0, avg: 9.777777777777779 } }
+      }.to_json
+
+      get :propval, model: "Europe", scenario: "BAMBU", variable: "pre", format: :json
+      response.body.should == expected
+    end
+  end
+  
+  describe "propdiff" do
+    
+    it "should render right result: propdiff only year" do
+      expected = {
+        prop: "diff", model_name: "Europe", scenario_name: "BAMBU", year1: "2001", year2: "2002",
+        data: { pre: { min: -14.0, max: -9.0, avg: -11.5 } }
+      }.to_json
+
+      get :propdiff, model: "Europe", scenario: "BAMBU", year1: 2001, year2: 2002, variable: "pre", format: :json
+      response.body.should == expected
+    end
+    
+    it "should render right result: propdiffaggr year function" do
+      expected = {
+        prop: "diff", model_name: "Europe", scenario_name: "BAMBU", year1: "2001", function1: "min", year2: "2002", function2: "max",
+        data: { diff: -14.0 }
+      }.to_json
+
+      get :propdiff, model: "Europe", scenario: "BAMBU", year1: 2001, function1: "min", year2: 2002, function2: "max", variable: "pre", format: :json
+      response.body.should == expected
+    end
+    
+    it "should render right result: propdiff year month" do
+      expected = {
+        prop: "diff", model_name: "Europe", scenario_name: "BAMBU", year1: "2001", month1: "1", year2: "2004", month2: "1",
+        data: { pre: { min: -25.0, max: -22.0, avg: -23.5} }
+      }.to_json
+
+      get :propdiff, model: "Europe", scenario: "BAMBU", year1: 2001, month1: 1, year2: 2004, month2: 1, variable: "pre", format: :json
+      response.body.should == expected
+    end
+  end
+
   private
     include SpecHelperMethods
   
