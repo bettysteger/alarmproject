@@ -1,6 +1,5 @@
 class Value
   include Mongoid::Document
-  include Mongoid::MapReduce
 
   field :year,    type: Integer
   field :month,   type: Integer
@@ -21,6 +20,38 @@ class Value
   
   private 
   
+  def self.map
+    "function() {emit(this.point_id, this.number);}"
+  end
+  
+  def self.reduce_avg
+    "function(point, values) {
+      var sum = 0;
+      values.forEach(function(number) {
+        sum += number;
+      });
+      return sum / values.length;
+    }"
+  end
+  def self.reduce_min
+    "function(point, values) {
+      var min = values[0];
+      values.forEach(function(number) {
+        if (number < min) min = number;
+      });
+      return min;
+    }"
+  end
+  def self.reduce_max
+    "function(point, values) {
+      var max = values[0];
+      values.forEach(function(number) {
+        if (number > max) max = number;
+      });
+      return max;
+    }"
+  end
+  
   # if there is an var_id passed then we want that id, if not the params[:variable] is used
   # if there is a number (no) passed then we have params[:year1] and params[:year2] (used for diff values)
   def self.get_values params, var_id=false, no=""
@@ -32,8 +63,8 @@ class Value
     month = params["month#{no}"]
     
     v = Value.only(:number, :point_id)
-    v = v.where(year: year) if year # for /propval/Mo/Sc/all/all/Var.Out
-    v = v.where(month: month) if month # for aggregated values
+    v = v.where(year: year.to_i) if year # for /propval/Mo/Sc/all/all/Var.Out
+    v = v.where(month: month.to_i) if month # for aggregated values
     v.where(model_id: model_id, scenario_id: scenario_id, variable_id: var_id)
   end
   

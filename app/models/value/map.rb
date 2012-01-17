@@ -19,15 +19,46 @@ class Map < Value
   end
   
   def self.mapvalaggr_var params
-    values = get_values(params)
-    hash = values.asc(:number).group_by(&:point_id)
+    
+    model_id = Model.find_id_by_name(params[:model])
+    scenario_id = Scenario.find_id_by_name(params[:scenario])
+    var_id = Variable.find_id_by_name(params[:variable]) if params[:variable]
+    
+    year = params[:year].to_i
+    query = {model_id: model_id, scenario_id: scenario_id, variable_id: var_id, year: year.to_i}
+    
+    # reduce = "function(point, values) {
+    #   var n = {avg: 0, min: 0, max: 0};
+    #   var sum = 0;
+    #   var count = 0;
+    #   var min = values[0];
+    #   var max = values[0];
+    #   values.forEach(function(number) {
+    #     if (number < min) min = number;
+    #     if (number > max) max = number;
+    #     sum += number;
+    #     count += 1;
+    #   });
+    #   n.min = min;
+    #   n.max = max;
+    #   n.avg = sum / count;
+    #   return n;
+    # }"
+    # finalize = "function (point, value) {
+    #   value.avg = value.sum / value.count;
+    #   delete value.sum;
+    #   delete value.count;
+    #   return value;
+    # }"
     
     data = {}
     data[params[:variable]] = []
     
-    hash.each do |k,v|
-      data[params[:variable]] << get_aggr(params[:function], v)
+    result = Value.collection.map_reduce(map, send("reduce_#{params[:function]}"), out: "results", query: query)
+    result.find().each do |hash|
+      data[params[:variable]] << hash["value"]
     end
+
     output_hash("val", params, data)
   end
   
