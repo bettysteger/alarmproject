@@ -19,42 +19,11 @@ class Map < Value
   end
   
   def self.mapvalaggr_var params
-    
-    model_id = Model.find_id_by_name(params[:model])
-    scenario_id = Scenario.find_id_by_name(params[:scenario])
-    var_id = Variable.find_id_by_name(params[:variable]) if params[:variable]
-    
-    year = params[:year].to_i
-    query = {model_id: model_id, scenario_id: scenario_id, variable_id: var_id, year: year.to_i}
-    
-    # reduce = "function(point, values) {
-    #   var n = {avg: 0, min: 0, max: 0};
-    #   var sum = 0;
-    #   var count = 0;
-    #   var min = values[0];
-    #   var max = values[0];
-    #   values.forEach(function(number) {
-    #     if (number < min) min = number;
-    #     if (number > max) max = number;
-    #     sum += number;
-    #     count += 1;
-    #   });
-    #   n.min = min;
-    #   n.max = max;
-    #   n.avg = sum / count;
-    #   return n;
-    # }"
-    # finalize = "function (point, value) {
-    #   value.avg = value.sum / value.count;
-    #   delete value.sum;
-    #   delete value.count;
-    #   return value;
-    # }"
-    
     data = {}
     data[params[:variable]] = []
     
-    result = Value.collection.map_reduce(map, send("reduce_#{params[:function]}"), out: "results", query: query)
+    # map, reduce_avg, reduece_min, reduce_max functions are below and private
+    result = Value.collection.map_reduce(map, send("reduce_#{params[:function]}"), out: "results", query: get_query(params))
     result.find().each do |hash|
       data[params[:variable]] << hash["value"]
     end
@@ -66,11 +35,12 @@ class Map < Value
     data = {}
     Variable.all.each do |var|
       data[var.name] = []
-      values = get_values(params, var.id)
-      hash = values.asc(:number).group_by(&:point_id)
-      hash.each do |k,v|
-        data[var.name] << get_aggr(params[:function], v)
+      
+      result = Value.collection.map_reduce(map, send("reduce_#{params[:function]}"), out: "results", query: get_query(params, var.id))
+      result.find().each do |hash|
+        data[var.name] << hash["value"]
       end
+      
     end
     output_hash("val", params, data)
   end
@@ -167,6 +137,40 @@ class Map < Value
     end
     output_hash("diff", params, data)
   end
-
+  
+  
+  private
+  
+  def self.map
+    "function() {emit(this.point_id, this.number);}"
+  end
+  
+  def self.reduce_avg
+    "function(key, values) {
+      var sum = 0;
+      values.forEach(function(number) {
+        sum += number;
+      });
+      return sum / values.length;
+    }"
+  end
+  def self.reduce_min
+    "function(key, values) {
+      var min = values[0];
+      values.forEach(function(number) {
+        if (number < min) min = number;
+      });
+      return min;
+    }"
+  end
+  def self.reduce_max
+    "function(key, values) {
+      var max = values[0];
+      values.forEach(function(number) {
+        if (number > max) max = number;
+      });
+      return max;
+    }"
+  end
 
 end

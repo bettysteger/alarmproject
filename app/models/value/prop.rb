@@ -3,12 +3,14 @@ class Prop < Value
   # properties methods
   
   def self.propval params
-    values = get_values(params).asc(:number)
+    result = Value.collection.map_reduce(map, reduce, out: "results", query: get_query(params))
+    result = result.find().first["value"]
+    
     data = {}
     data[params[:variable]] = {}
-    data[params[:variable]]["min"] = values.first.number
-    data[params[:variable]]["max"] = values.last.number
-    data[params[:variable]]["avg"] = avg(values)
+    data[params[:variable]]["min"] = result["min"]
+    data[params[:variable]]["max"] = result["max"]
+    data[params[:variable]]["avg"] = result["avg"]
 
     output_hash("val", params, data, "prop")
   end
@@ -36,6 +38,33 @@ class Prop < Value
     data["diff"] = number1 - number2
 
     output_hash("diff", params, data, "prop")
+  end
+  
+  
+  private
+  
+  def self.map
+    "function() {emit(this.scenario_id, this.number);}"
+  end
+  
+  def self.reduce
+    "function(point, values) {
+      var n = {avg: 0, min: 0, max: 0};
+      var sum = 0;
+      var count = 0;
+      var min = values[0];
+      var max = values[0];
+      values.forEach(function(number) {
+        if (number < min) min = number;
+        if (number > max) max = number;
+        sum += number;
+        count += 1;
+      });
+      n.min = min;
+      n.max = max;
+      n.avg = sum / count;
+      return n;
+    }"
   end
 
 end
