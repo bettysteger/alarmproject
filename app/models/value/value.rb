@@ -30,7 +30,7 @@ class Value
     
     year = params["year#{no}"]
     month = params["month#{no}"]
-    
+        
     v = Value.only(:number, :point_id)
     v = v.where(year: year) if year # for /propval/Mo/Sc/all/all/Var.Out
     v = v.where(month: month) if month # for aggregated values
@@ -50,6 +50,14 @@ class Value
       when "avg"
         avg(values)
     end
+  end
+
+  def self.grid(values)
+    result = Array.new(259) { Array.new(229)}
+    values.each do |value|
+      result[value.point.x][value.point.y] = value.number
+    end
+    result
   end
   
   def self.output_hash info, params, data, what="map"

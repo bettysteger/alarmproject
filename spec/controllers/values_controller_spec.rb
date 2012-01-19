@@ -12,25 +12,23 @@ describe ValuesController do
   end
   
   describe "mapval" do
-    
+
     it "should render right result: mapval_var" do
-      expected = {
-        map: "val", model_name: "Europe", scenario_name: "BAMBU", year: "2001", month: "1",
-        data: { pre: [1.0, 4.0]}
-      }.to_json
-      
       get :mapval, model: "Europe", scenario: "BAMBU", year: 2001, month: 1, variable: "pre", format: :json
-      response.body.should == expected
+      assert1 = response.body.match /\{"map":"val","model_name":"Europe","scenario_name":"BAMBU","year":"2001","month":"1","data":\{"pre":/
+      assert1.should be_true
+      assert2 = response.body.match "#{/.*/}1.0#{/.*/}4.0#{/.*/}"
+      assert2.should be_true
+      assert3 = response.body.match "#{/.*/}7.0#{/.*/}10.0#{/.*/}"
+      assert3.should be_false
     end
-    
+
     it "should render right result: mapval_all" do
-      expected = {
-        map: "val", model_name: "Europe", scenario_name: "BAMBU", year: "2001", month: "1",
-        data: { pre: [1.0, 4.0], tmp: [7.0, 10.0] }
-      }.to_json
-      
       get :mapval, model: "Europe", scenario: "BAMBU", year: 2001, month: 1, format: :json
-      response.body.should == expected
+      assert1 = response.body.match /\{"map":"val","model_name":"Europe","scenario_name":"BAMBU","year":"2001","month":"1","data":\{"pre":/
+      assert1.should be_true
+      assert2 = response.body.match "#{/.*/}1.0#{/.*/}4.0#{/.*/}7.0#{/.*/}10.0#{/.*/}"
+      assert2.should be_true
     end
 
   end

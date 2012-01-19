@@ -5,15 +5,15 @@ class Map < Value
   def self.mapval_var params
     values = get_values(params)
     data = {}
-    data[params[:variable]] = values.map(&:number)
+    data[params[:variable]] = grid(values)
     output_hash("val", params, data)
   end
   
   def self.mapval_all params
     data = {}
     Variable.all.each do |var|
-      values = get_values(params, var.id)
-      data[var.name] = values.map(&:number)
+     values = get_values(params, var.id)
+     data[var.name] = grid(values)
     end
     output_hash("val", params, data)
   end
