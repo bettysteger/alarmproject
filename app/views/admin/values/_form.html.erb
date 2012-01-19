@@ -1,0 +1,52 @@
+<%= render "form_javascripts" %>
+
+<%= form_for @item, :url => options, :html => { :class => "resource", :multipart => true } do |form| %>
+
+  <%= render "helpers/admin/resources/errors" %>
+
+  <fieldset class="inputs">   
+    <ol>
+	    <li id="values_year">
+			<%= form.label "Year" %>
+		    <%= form.text_field :year %>
+			</li>
+		    <li id="values_month">
+				<%= form.label "Month" %>
+		    	<%= form.text_field :month %>
+			</li>
+			<li id="values_number">
+				<%= form.label "Number" %>
+			    <%= form.text_field :number %>
+			</li>
+			<li id="values_model_id">
+					<%= form.label "Model" %>
+			    <%= form.select(:model_id, Model.all.map {|u| [u.name,u.id]}) %>
+			</li>
+			<li id="values_scenario_id">
+					<%= form.label "Scenario" %>
+			    <%= form.select(:scenario_id, Scenario.all.map {|u| [u.name,u.id]}) %>
+			</li>
+			<li id="values_variable_id">
+					<%= form.label "Variable" %>
+			    <%= form.select(:variable_id, Variable.all.map {|u| [u.name,u.id]}) %>
+			</li>
+			<li id="values_point_id">
+					<%= form.label "Point" %>
+			    <%= form.select(:point_id, Point.all.map {|u| [u.full,u.id]}) %>
+			</li>
+    </ol>
+  </fieldset>
+
+  <fieldset class="buttons">
+    <ol>
+      <% build_save_options.each do |key, value, special| %>
+        <%
+          message = Typus::I18n.t(value)
+          options = { :name => key, :onclick => "Typus.setConfirmUnload(false);", :disable_with => message  }
+        %>
+        <li><%= submit_tag message, options %></li>
+      <% end %>
+    </ol>
+  </fieldset>
+
+<% end %>

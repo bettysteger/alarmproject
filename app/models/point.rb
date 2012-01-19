@@ -13,4 +13,9 @@ class Point
   def to_hash
     {_id: id, x: x, y: y}
   end
+
+  def full
+    "x: #{x} y: #{y}"
+  end
+
 end

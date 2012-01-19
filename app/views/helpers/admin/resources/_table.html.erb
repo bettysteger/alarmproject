@@ -1,0 +1,45 @@
+<% yield_name = "table_headers_#{model}" %>
+
+<% content_for yield_name do %>
+  <thead>
+    <tr>
+      <% if controller.respond_to?(:bulk) %>
+        <th><%= check_box_tag "action-toggle", "", false, :class => "action-toggle" %></th>
+      <% end %>
+      <% headers.each do |header| %>
+        <th><%= header %></th>
+      <% end %>
+    </tr>
+  </thead>
+<% end %>
+
+<table>
+
+  <%= yield yield_name %>
+
+  <% items.each do |item| %>
+    <tr class="<%= cycle('even', 'odd') %>" id="<%= dom_id(item) %>">
+      <% if controller.respond_to?(:bulk) %>
+        <td width="16">
+          <%= check_box_tag "selected_item_ids[]", item.id, false, :class => "action-select" %>
+        </td>
+      <% end %>
+      <% table_fields_for_item(item, fields).each_with_index do |field, index| %>
+        <td>
+          <%= field %>
+          <% if index.zero? %>
+            <div class="actions">
+                <% table_actions(model, item, association_name).each_with_index do |action, index| %>
+                  <%= "/" unless index.zero? %>
+                  <%= link_to action[:message], action[:url], action[:options] %>
+                <% end %>
+            </div>
+          <% end %>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+
+  <%= yield yield_name %>
+
+</table>

@@ -1,0 +1,24 @@
+<%= form_tag :action => 'bulk' do %>
+
+  <%= block.call %>
+
+  <% if bulk_actions.any? %>
+
+    <div id="filters">
+      <ul class="predefined_filters">
+        <li>
+          <select id="bulk_action" name="batch_action">
+            <option value="" selected="selected">Bulk actions</option>
+            <% bulk_actions.each do |name, action| %>
+              <option value="<%= action %>"><%= Typus::I18n.t(name) %></option>
+            <% end %>
+          </select>
+        </li>
+
+        <li><%= submit_tag Typus::I18n.t("Apply") %></li>
+      </ul>
+    </div>
+
+  <% end %>
+
+<% end %>

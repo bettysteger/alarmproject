@@ -1,0 +1,40 @@
+# Use the README file as a reference to customize settings.
+
+Model:
+  fields:
+    default: name, desc
+    list: name, desc
+    form: name, desc
+  relationships: values
+  application: Climadata
+
+Point:
+  fields:
+    default: x, y
+    list: x, y
+    form: x, y
+  relationships: values
+  application: Climadata
+
+Scenario:
+  fields:
+    default: name
+    list: name
+    form: name, desc
+  relationsships: values
+  application: Climadata
+  
+Variable:
+  fields:
+    default: name, desc
+    list: name, desc
+    form: name, desc
+  relationships: values
+  application: Climadata
+  
+Value:
+  fields:
+    default: year, month, number
+    form: model, scenario, variable, point, year, month, number
+  relationships: model.name, scenario.name, variable.name, point.name
+  application: Climadata

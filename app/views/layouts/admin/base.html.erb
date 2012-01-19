@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html lang="<%= I18n.locale %>">
+
+<head>
+  <%= render 'admin/shared/head' %>
+</head>
+
+<body>
+
+  <div id="wrapper">
+
+    <div id="header">
+      <div class="container_12">
+        <div class="grid_12 title">
+          <%= header %>
+        </div>
+
+        <div class="grid_8 applications">
+          <%= apps %>
+        </div>
+
+        <div class="grid_4 profile">
+          <%= login_info %>
+        </div>
+      </div>
+    </div>
+
+    <div id="content">
+      <div class="container_12">
+        <%= yield :layout %>
+      </div>
+    </div>
+
+    <div id="footer">
+      <div class="container_12">
+        <div class="grid_12">
+          <span class="copyright">
+            Powered by <%= link_to "Typus", "http://core.typuscmf.com/" %> &#183; <%= Typus.admin_sub_title.html_safe %>
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+
+</html>

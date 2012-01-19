@@ -1,0 +1,50 @@
+<%
+  page_title = @resource.model_name.human.pluralize
+  title(page_title)
+%>
+
+<% content_for :main_grid do %>
+
+  <h2>
+    <%= page_title %>
+    <small><%= list_actions %></small>
+  </h2>
+
+  <%= display_flash_message %>
+
+  <%= render 'index' %>
+
+	<table>
+	  <tr>
+	  	<th>Model</th>
+	  	<th>Scenario</th>
+	  	<th>Variable</th>
+	  	<th>Point</th>
+	  	<th>Year</th>
+	    <th>Month</th>
+	    <th>Number</th>
+	    <th></th>
+	  </tr>
+	
+	<% @items.each do |value| %>
+	  <tr>
+	    <td><%= value.model.name %></td>
+	    <td><%= value.scenario.name %></td>
+	    <td><%= value.variable.name %></td>
+	    <td><%= value.point.x %> <%= value.point.y %></td>
+	    <td><%= value.year %></td>
+	    <td><%= value.month %></td>
+	    <td><%= value.number %></td>
+	  </tr>
+	<% end %>
+	</table>
+
+<% end %>
+
+<div class="grid_2">
+  <%= build_sidebar %>
+</div>
+
+<div class="grid_10">
+  <%= yield :main_grid %>
+</div>

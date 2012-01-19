@@ -1,0 +1,18 @@
+<%= form_tag nil, :method => :get do %>
+
+  <div id="filters">
+    <ul>
+      <% filters.each do |filter| %>
+        <% key, value = filter[:key], filter[:value] %>
+        <li><%= select_tag key, options_for_select(value, params[key]) %></li>
+      <% end %>
+
+      <% hidden_filters.each do |key, value| %>
+        <%= hidden_field_tag key, value %>
+      <% end %>
+
+      <li><%= submit_tag Typus::I18n.t("Filter"), :name => nil, :disable_with => Typus::I18n.t("Sending data ...") %></li>
+    </ul>
+  </div>
+
+<% end %>

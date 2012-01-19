@@ -1,0 +1,23 @@
+<!-- This probably needs a rename, but for the moment is ok -->
+
+<% if (resources = Typus.resources.delete_if { |r| !(admin_user.is_a?(FakeUser) || admin_user.resources.include?(r)) }).any? %>
+
+  <h2><%= Typus::I18n.t("Resources") %></h2>
+
+  <table>
+
+    <thead>
+      <tr>
+        <th><%= Typus::I18n.t("Name") %></th>
+      </tr>
+    </thead>
+
+    <% resources.each do |resource| %>
+      <tr class="<%= cycle("even", "odd") %>">
+        <td><%= link_to Typus::I18n.t(resource.titleize.capitalize), :controller => "/admin/#{resource.underscore}" %></td>
+      </tr>
+    <% end %>
+
+  </table>
+
+<% end %>
