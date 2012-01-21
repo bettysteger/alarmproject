@@ -1,6 +1,5 @@
 class Value
   include Mongoid::Document
-  include Mongoid::MapReduce
 
   field :year,    type: Integer
   field :month,   type: Integer
@@ -19,7 +18,7 @@ class Value
   belongs_to :variable, index: true
   belongs_to :point, index: true
   
-  private 
+  private
   
   # if there is an var_id passed then we want that id, if not the params[:variable] is used
   # if there is a number (no) passed then we have params[:year1] and params[:year2] (used for diff values)
@@ -32,9 +31,23 @@ class Value
     month = params["month#{no}"]
         
     v = Value.only(:number, :point_id)
-    v = v.where(year: year) if year # for /propval/Mo/Sc/all/all/Var.Out
-    v = v.where(month: month) if month # for aggregated values
+    v = v.where(year: year.to_i) if year # for /propval/Mo/Sc/all/all/Var.Out
+    v = v.where(month: month.to_i) if month # for aggregated values
     v.where(model_id: model_id, scenario_id: scenario_id, variable_id: var_id)
+  end
+  
+  def self.get_query params, var_id=false, no=""
+    model_id = Model.find_id_by_name(params[:model])
+    scenario_id = Scenario.find_id_by_name(params[:scenario])
+    var_id = Variable.find_id_by_name(params[:variable]) if params[:variable]
+    
+    year = params["year#{no}"]
+    month = params["month#{no}"]
+    
+    q = {model_id: model_id, scenario_id: scenario_id, variable_id: var_id}
+    q.merge!({year: year.to_i}) if year
+    q.merge!({month: month.to_i}) if month
+    q
   end
   
   def self.avg(array)
