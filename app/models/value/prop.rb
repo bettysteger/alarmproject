@@ -1,4 +1,4 @@
-class Prop < Value
+class Value::Prop < Value
   
   # properties methods
   

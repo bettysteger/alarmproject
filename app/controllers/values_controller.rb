@@ -7,35 +7,35 @@ class ValuesController < ApplicationController
   
   # all values for that model, scenario, year and month (and variable)
   def mapval
-    values = params[:variable] ? Map.mapval_var(params) : Map.mapval_all(params)
+    values = params[:variable] ? Value::Map.mapval_var(params) : Value::Map.mapval_all(params)
     respond_with(values)
   end
   
   # all aggregated (min, max or avg) values for that model, scenario, year and 12 months (and variable)
   def mapvalaggr
-    values = params[:variable] ? Map.mapvalaggr_var(params) : Map.mapvalaggr_all(params)
+    values = params[:variable] ? Value::Map.mapvalaggr_var(params) : Value::Map.mapvalaggr_all(params)
     respond_with(values)
   end
   
   # difference values for 2 specific months
   def mapdiff
-    values = params[:variable] ? Map.mapdiff_var(params) : Map.mapdiff_all(params)
+    values = params[:variable] ? Value::Map.mapdiff_var(params) : Value::Map.mapdiff_all(params)
     respond_with(values)
   end
   
   # aggregated difference values for 2 specific years
   def mapdiffaggr
-    values = params[:variable] ? Map.mapdiffaggr_var(params) : Map.mapdiffaggr_all(params)
+    values = params[:variable] ? Value::Map.mapdiffaggr_var(params) : Value::Map.mapdiffaggr_all(params)
     respond_with(values)
   end
   
   def propval
-    values = Prop.propval(params)
+    values = Value::Prop.propval(params)
     respond_with(values) 
   end
   
   def propdiff
-    values = params[:function1] ? Prop.propdiffaggr(params) : Prop.propdiff(params)
+    values = params[:function1] ? Value::Prop.propdiffaggr(params) : Value::Prop.propdiff(params)
     respond_with(values) 
   end
   

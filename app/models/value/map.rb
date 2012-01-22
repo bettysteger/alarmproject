@@ -1,4 +1,4 @@
-class Map < Value
+class Value::Map < Value
   
   # matrices methods
   
@@ -19,11 +19,15 @@ class Map < Value
   end
   
   def self.mapvalaggr_var params
+    f = params[:function]
     data = {}
     data[params[:variable]] = []
     
+    parameters = {out: "aggr_var", query: get_query(params)} 
+    parameters.merge!({finalize: finalize}) if f == "avg"
+    
     # map, reduce_avg, reduece_min, reduce_max functions are below and private
-    result = Value.collection.map_reduce(map, send("reduce_#{params[:function]}"), out: "results", query: get_query(params))
+    result = Value.collection.map_reduce(map, send("reduce_#{f}"), parameters)
     result.find().each do |hash|
       data[params[:variable]] << hash["value"]
     end
@@ -32,11 +36,15 @@ class Map < Value
   end
   
   def self.mapvalaggr_all params
+    f = params[:function]
     data = {}
     Variable.all.each do |var|
       data[var.name] = []
       
-      result = Value.collection.map_reduce(map, send("reduce_#{params[:function]}"), out: "results", query: get_query(params, var.id))
+      parameters = {out: "aggr_all", query: get_query(params, var.id)} 
+      parameters.merge!({finalize: finalize}) if f == "avg"
+      
+      result = Value.collection.map_reduce(map, send("reduce_#{f}"), parameters)
       result.find().each do |hash|
         data[var.name] << hash["value"]
       end
@@ -145,13 +153,22 @@ class Map < Value
     "function() {emit(this.point_id, this.number);}"
   end
   
+  # def self.reduce_avg
+  #   "function(key, values) {
+  #     var sum = 0;
+  #     values.forEach(function(number) {
+  #       sum += number;
+  #     });
+  #     return sum / values.length;
+  #   }"
+  # end
   def self.reduce_avg
     "function(key, values) {
       var sum = 0;
       values.forEach(function(number) {
         sum += number;
       });
-      return sum / values.length;
+      return {sum: sum, count: values.length};
     }"
   end
   def self.reduce_min
@@ -170,6 +187,12 @@ class Map < Value
         if (number > max) max = number;
       });
       return max;
+    }"
+  end
+  
+  def self.finalize
+    "function (point, value) {
+      return value.sum / value.count;
     }"
   end
 

@@ -18,6 +18,12 @@ class Value
   belongs_to :variable, index: true
   belongs_to :point, index: true
   
+  index([
+    [ :model, Mongo::ASCENDING ],
+    [ :scenario, Mongo::ASCENDING ],
+    [ :variable, Mongo::ASCENDING ]
+  ])
+   
   private
   
   # if there is an var_id passed then we want that id, if not the params[:variable] is used
