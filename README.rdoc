@@ -2,7 +2,7 @@
 
 * this project has a heavy database
 * we are exploring how to work with lots of data with Rails 3 and MongoDB
-* our data is located in db/data (1,14 GB) .. this folder is in the gitignore, see below where you can download the data
+* our data is located in db/data (1,7 GB) .. this folder is in the gitignore, see below where you can download the data
 * example data for testing is located in test/fixtures
 
 == usage
@@ -12,6 +12,14 @@ then start mongo server:
   rake db:mongo:start
 import json objects in mongodb
   rake db:import
+  
+example queries: (further information in config/routes.rb)
+* http://localhost:3000/mapval/Europe/BAMBU/2001/1/pre.json
+* http://localhost:3000/propdiff/Europe/BAMBU/2002/12/2011/1/pre.json
+
+== Documentation
+the german documentation is located in doc/doc.pdf
+
 
 == ALARM observed and scenario climate data
 
@@ -26,12 +34,25 @@ Fronzek et al. (2011), with additional methodological information
 provided in Mitchell et al (2004).
 The data are downloadable from: http://www.alarmproject.net/alarm
 
-* pre ... precipitation [mm]
+* 3 Variables:
+  * pre ... precipitation [mm]
+  * tmp ... near-surface temperature [° Celsius]
+  * gdd ... growing degree days [1]
+
+* 3 Scenarios:
   * http://www.alarmproject.net/climate/climate/monthly/GRAS.A1FI.HadCM3.2001-2100.pre.tgz
   * http://www.alarmproject.net/climate/climate/monthly/SEDG.B1.HadCM3.2001-2100.pre.tgz
   * http://www.alarmproject.net/climate/climate/monthly/BAMBU.A2.HadCM3.2001-2100.pre.tgz
 
-* tmp ... near-surface temperature [° Celsius]
-  * http://www.alarmproject.net/climate/climate/monthly/GRAS.A1FI.HadCM3.2001-2100.tmp.tgz
-  * http://www.alarmproject.net/climate/climate/monthly/SEDG.B1.HadCM3.2001-2100.tmp.tgz
-  * http://www.alarmproject.net/climate/climate/monthly/BAMBU.A2.HadCM3.2001-2100.tmp.tgz
+
+== Developers
+
+* Matthias Frick (http://github.com/mattherick)
+* Bettina Steger (http://github.com/lpsBetty)
+
+== Partners
+
+Development is supported by FH Salzburg - University of Applied Sciences Salzburg
+
+
+
