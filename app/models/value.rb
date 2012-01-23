@@ -4,6 +4,8 @@ class Value
   field :year,    type: Integer
   field :month,   type: Integer
   field :number,  type: Float
+  index :year
+  index :month
 
   validates :year,      presence: true
   validates :month,     presence: true

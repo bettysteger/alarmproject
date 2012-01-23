@@ -3,7 +3,7 @@ class Value::Prop < Value
   # properties methods
   
   def self.propval params
-    result = Value.collection.map_reduce(map, reduce, out: "results", query: get_query(params))
+    result = Value.collection.map_reduce(map, reduce, finalize: finalize, out: "results", query: get_query(params))
     result = result.find().first["value"]
     
     data = {}
@@ -49,21 +49,27 @@ class Value::Prop < Value
   
   def self.reduce
     "function(point, values) {
-      var n = {avg: 0, min: 0, max: 0};
-      var sum = 0;
-      var count = 0;
+      var n = {min: 0, max: 0, avg: 0, sum: 0, count: 0};
       var min = values[0];
       var max = values[0];
       values.forEach(function(number) {
         if (number < min) min = number;
         if (number > max) max = number;
-        sum += number;
-        count += 1;
+        n.sum += number;
       });
       n.min = min;
       n.max = max;
-      n.avg = sum / count;
+      n.count = values.length;
       return n;
+    }"
+  end
+  
+  def self.finalize
+    "function (point, value) {
+      value.avg = value.sum / value.count;
+      delete value.sum;
+      delete value.count;
+      return value;
     }"
   end
 
