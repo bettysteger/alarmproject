@@ -28,9 +28,9 @@ class Value::Map < Value
     
     # map, reduce_avg, reduece_min, reduce_max functions are below and private
     result = Value.collection.map_reduce(map, send("reduce_#{f}"), parameters)
-    result.find().each do |hash|
-      data[params[:variable]] << hash["value"]
-    end
+    result = Point.collection.map_reduce(map_point, reduce_point, {out: {reduce: "aggr_var"}});
+    
+    data[params[:variable]] = grid2(result)
 
     output_hash("val", params, data)
   end
@@ -149,19 +149,18 @@ class Value::Map < Value
   
   private
   
+  def self.map_point
+    "function() {emit(this._id, {x: this.x, y: this.y});}"
+  end
+  
+  def self.reduce_point
+    "function(key, values) {return {point: values};}"
+  end
+  
   def self.map
     "function() {emit(this.point_id, this.number);}"
   end
   
-  # def self.reduce_avg
-  #   "function(key, values) {
-  #     var sum = 0;
-  #     values.forEach(function(number) {
-  #       sum += number;
-  #     });
-  #     return sum / values.length;
-  #   }"
-  # end
   def self.reduce_avg
     "function(key, values) {
       var sum = 0;

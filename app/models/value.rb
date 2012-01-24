@@ -81,6 +81,20 @@ class Value
     result
   end
   
+  # "value"=>{"point"=>[{"x"=>1.0, "y"=>2.0}, 2.0]}
+  def self.grid2(values)
+    result = Array.new(259) { Array.new(229)}
+    values.find().each do |hash|
+      if hash = hash["value"]["point"]
+        x = hash.first["x"]
+        y = hash.first["y"]
+        value = hash.last
+        result[x][y] = value
+      end
+    end
+    result
+  end
+  
   def self.output_hash info, params, data, what="map"
     hash = {}
     hash[what] = info

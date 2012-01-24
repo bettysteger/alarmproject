@@ -3,7 +3,7 @@ class Value::Prop < Value
   # properties methods
   
   def self.propval params
-    result = Value.collection.map_reduce(map, reduce, finalize: finalize, out: "results", query: get_query(params))
+    result = Value.collection.map_reduce(map, reduce, finalize: finalize, out: "propval", query: get_query(params))
     result = result.find().first["value"]
     
     data = {}

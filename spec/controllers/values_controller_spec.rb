@@ -36,33 +36,27 @@ describe ValuesController do
   describe "mapvalaggr" do
     
     it "should render right result: mapvalaggr_var min" do
-      expected = {
-        map: "val", model_name: "Europe", scenario_name: "BAMBU", year: "2001", function: "min",
-        data: { pre: [1.0, 4.0] }
-      }.to_json
-
       get :mapvalaggr, model: "Europe", scenario: "BAMBU", year: 2001, function: "min", variable: "pre", format: :json
-      response.body.should == expected
+      assert1 = response.body.match /\{"map":"val","model_name":"Europe","scenario_name":"BAMBU","year":"2001","function":"min","data":\{"pre":/
+      assert1.should be_true
+      assert2 = response.body.match "#{/.*/}1.0#{/.*/}4.0#{/.*/}"
+      assert2.should be_true
     end
     
     it "should render right result: mapvalaggr_var max" do
-      expected = {
-        map: "val", model_name: "Europe", scenario_name: "BAMBU", year: "2001", function: "max",
-        data: { pre: [3.0, 6.0] }
-      }.to_json
-
       get :mapvalaggr, model: "Europe", scenario: "BAMBU", year: 2001, function: "max", variable: "pre", format: :json
-      response.body.should == expected
+      assert1 = response.body.match /\{"map":"val","model_name":"Europe","scenario_name":"BAMBU","year":"2001","function":"max","data":\{"pre":/
+      assert1.should be_true
+      assert2 = response.body.match "#{/.*/}3.0#{/.*/}6.0#{/.*/}"
+      assert2.should be_true
     end
     
     it "should render right result: mapvalaggr_var avg" do
-      expected = {
-        map: "val", model_name: "Europe", scenario_name: "BAMBU", year: "2001", function: "avg",
-        data: { pre: [2.0, 5.0] }
-      }.to_json
-
       get :mapvalaggr, model: "Europe", scenario: "BAMBU", year: 2001, function: "avg", variable: "pre", format: :json
-      response.body.should == expected
+      assert1 = response.body.match /\{"map":"val","model_name":"Europe","scenario_name":"BAMBU","year":"2001","function":"avg","data":\{"pre":/
+      assert1.should be_true
+      assert2 = response.body.match "#{/.*/}2.0#{/.*/}5.0#{/.*/}"
+      assert2.should be_true
     end
     
     it "should render right result: mapvalaggr_all min" do
